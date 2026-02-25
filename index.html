@@ -1,0 +1,4434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEBRID — Agent Operating System for Capital</title>
+  <meta name="description" content="GEBRID OS — the AI-native operating system for on-chain capital. Policy-based protection, institutional-grade controls, and agent swarms for trading, RWA and treasury workflows." />
+  <meta name="theme-color" content="#000000" />
+
+  <!-- Google Fonts (allowed external dependency) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* CORE */
+      --black-base:#000000;
+      --black-ui:#0B0F14;
+      --panel-dark:#111827;
+
+      /* TEXT */
+      --white-primary:#FFFFFF;
+      --text-secondary:#BFC7D5;
+      --text-muted:#6B7280;
+
+      /* ACCENT */
+      --neon-primary:#A3FF12;
+      --neon-cta:#8DFF00;
+      --neon-soft:#7CFF4F;
+
+      /* RISK ENGINE */
+      --crisis-red:#FF3B3B;
+      --profit-green:#00C853;
+      --warning-amber:#FF9F0A;
+
+      /* BORDERS */
+      --border-subtle:rgba(255,255,255,0.08);
+      --border-active:#A3FF12;
+
+      /* GLOWS */
+      --alpha-glow:rgba(163,255,18,0.15);
+
+      /* Extras for ecosystem cards */
+      --cyan:#00E5FF;
+      --pink:#FF3388;
+      --gold:#F6C453;
+
+      --radius-xl:24px;
+      --radius-lg:18px;
+      --radius-md:14px;
+      --radius-sm:10px;
+
+      --shadow-soft: 0 8px 40px rgba(0,0,0,.35);
+      --shadow-neon: 0 0 0 1px rgba(163,255,18,.35), 0 0 36px rgba(163,255,18,.12);
+      --container: min(1240px, calc(100vw - 32px));
+      --nav-h: 78px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 500px at 50% -10%, rgba(163,255,18,.08), transparent 70%),
+        radial-gradient(900px 500px at 95% 10%, rgba(0,229,255,.05), transparent 70%),
+        radial-gradient(700px 420px at 5% 40%, rgba(255,51,136,.035), transparent 70%),
+        var(--black-base);
+      color:var(--white-primary);
+      font-family:"IBM Plex Sans", sans-serif;
+      line-height:1.45;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+
+    /* Grain overlay */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:9999;
+      opacity:.02;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size:180px 180px;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    button,input{font:inherit}
+    .container{width:var(--container);margin-inline:auto}
+    .mono{font-family:"Space Mono", monospace}
+    .muted{color:var(--text-muted)}
+    .secondary{color:var(--text-secondary)}
+    .neon-text{
+      background:linear-gradient(90deg,var(--neon-primary),var(--neon-soft));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    /* Buttons */
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      padding:12px 16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:600;
+      transition:.2s ease;
+      white-space:nowrap;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn-outline{
+      background:rgba(255,255,255,.02);
+      color:var(--white-primary);
+      border:1px solid var(--border-subtle);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .btn-outline:hover{
+      border-color:rgba(163,255,18,.4);
+      box-shadow:0 0 0 1px rgba(163,255,18,.2), 0 0 20px rgba(163,255,18,.08);
+      background:rgba(163,255,18,.03);
+    }
+    .btn-neon{
+      color:#0B0F14;
+      background:linear-gradient(135deg,var(--neon-primary),var(--neon-cta));
+      box-shadow:0 0 0 1px rgba(163,255,18,.3), 0 8px 24px rgba(141,255,0,.22);
+      font-weight:700;
+    }
+    .btn-neon:hover{
+      transform:translateY(-1px);
+      box-shadow:0 0 0 1px rgba(163,255,18,.45), 0 14px 30px rgba(141,255,0,.28);
+      filter:saturate(1.05);
+    }
+    .btn-sm{padding:10px 12px;border-radius:12px;font-size:14px}
+    .btn-lg{padding:14px 20px;font-size:15px}
+
+    /* Nav */
+    .nav-wrap{
+      position:fixed;
+      inset:0 0 auto 0;
+      z-index:1000;
+      height:var(--nav-h);
+      background:linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.18));
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--border-subtle);
+    }
+    .nav{
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .brand img{
+      width:38px;height:38px;border-radius:50%;
+      object-fit:cover;
+      border:1px solid rgba(163,255,18,.35);
+      box-shadow:0 0 16px rgba(163,255,18,.14);
+      background:#0b0f14;
+    }
+    .brand-name{
+      font-family:"Syne", sans-serif;
+      font-weight:800;
+      letter-spacing:.03em;
+      font-size:18px;
+    }
+    .brand-sub{
+      display:block;
+      font-size:10px;
+      letter-spacing:.16em;
+      color:var(--text-muted);
+      text-transform:uppercase;
+      margin-top:1px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--border-subtle);
+      border-radius:999px;
+      padding:6px;
+    }
+    .nav-links a{
+      padding:8px 12px;
+      border-radius:999px;
+      color:var(--text-secondary);
+      font-size:14px;
+      transition:.2s ease;
+    }
+    .nav-links a:hover{
+      color:#fff;
+      background:rgba(255,255,255,.03);
+    }
+
+    .nav-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .wallet-pill{
+      display:none;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(163,255,18,.45);
+      background:rgba(163,255,18,.06);
+      border-radius:14px;
+      box-shadow:0 0 0 1px rgba(163,255,18,.16), 0 0 18px rgba(163,255,18,.09);
+      max-width:290px;
+    }
+    .wallet-pill.active{display:flex}
+    .wallet-status-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--neon-primary);
+      box-shadow:0 0 12px rgba(163,255,18,.65);
+      flex:0 0 auto;
+    }
+    .wallet-pill-text{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+    .wallet-pill-text strong{
+      font-size:13px;
+      font-weight:700;
+      color:#fff;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .wallet-pill-text span{
+      font-size:11px;color:var(--text-secondary);
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+
+    main{padding-top:calc(var(--nav-h) + 12px)}
+
+    /* Sections */
+    section{padding:34px 0}
+    .section-title{
+      font-family:"Syne", sans-serif;
+      font-weight:800;
+      font-size:clamp(24px, 2.8vw, 40px);
+      line-height:1.05;
+      letter-spacing:-.02em;
+      margin:0 0 12px;
+    }
+    .section-sub{
+      color:var(--text-secondary);
+      max-width:760px;
+      margin:0 0 22px;
+    }
+
+    /* Hero */
+    .hero{
+      padding-top:28px;
+      padding-bottom:22px;
+    }
+    .hero-shell{
+      position:relative;
+      border:1px solid var(--border-subtle);
+      border-radius:28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)),
+        radial-gradient(800px 280px at 50% 0%, rgba(163,255,18,.07), transparent 70%),
+        #06090d;
+      overflow:hidden;
+      box-shadow:var(--shadow-soft);
+    }
+    .hero-shell::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:28px;
+      pointer-events:none;
+      background:
+        linear-gradient(120deg,
+          rgba(163,255,18,.16),
+          transparent 22%,
+          transparent 76%,
+          rgba(0,229,255,.10));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      padding:1px;
+      mask-composite:exclude;
+      -webkit-mask-composite:xor;
+      opacity:.65;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:26px;
+      align-items:center;
+      padding:28px;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(163,255,18,.25);
+      background:rgba(163,255,18,.04);
+      padding:10px 14px;
+      border-radius:999px;
+      color:#dfffb2;
+      font-size:13px;
+      margin-bottom:16px;
+      box-shadow:0 0 0 1px rgba(163,255,18,.07), inset 0 0 24px rgba(163,255,18,.03);
+    }
+    .pulse-dot{
+      width:9px;height:9px;border-radius:50%;
+      background:var(--neon-primary);
+      box-shadow:0 0 16px rgba(163,255,18,.7);
+      animation:pulse 1.8s ease-in-out infinite;
+      flex:0 0 auto;
+    }
+    @keyframes pulse{
+      0%,100%{transform:scale(1);opacity:1}
+      50%{transform:scale(1.35);opacity:.55}
+    }
+
+    .hero h1{
+      margin:0;
+      font-family:"Syne", sans-serif;
+      font-weight:800;
+      letter-spacing:-.03em;
+      line-height:.95;
+      font-size:clamp(46px, 7vw, 86px);
+      max-width:780px;
+    }
+    .hero p{
+      margin:16px 0 0;
+      color:var(--text-secondary);
+      max-width:640px;
+      font-size:clamp(15px, 1.55vw, 18px);
+    }
+    .hero-cta{
+      margin-top:22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+    }
+
+    .mode-toggle{
+      margin-top:18px;
+      display:inline-flex;
+      gap:8px;
+      border:1px solid var(--border-subtle);
+      background:rgba(255,255,255,.015);
+      border-radius:14px;
+      padding:6px;
+    }
+    .mode-toggle button{
+      background:transparent;
+      color:var(--text-secondary);
+      border:1px solid transparent;
+      padding:10px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      transition:.2s ease;
+    }
+    .mode-toggle button.active{
+      color:#fff;
+      background:rgba(255,255,255,.03);
+      border-color:rgba(163,255,18,.28);
+      box-shadow:inset 0 0 18px rgba(163,255,18,.05);
+    }
+
+    .hero-visual{
+      position:relative;
+      min-height:420px;
+      display:grid;
+      place-items:center;
+      isolation:isolate;
+    }
+    .hero-orb{
+      position:absolute;
+      inset:auto;
+      width:360px;height:360px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(163,255,18,.14), rgba(163,255,18,.03) 46%, transparent 68%);
+      filter:blur(4px);
+      animation:drift 10s ease-in-out infinite;
+      z-index:-1;
+    }
+    @keyframes drift{
+      0%,100%{transform:translateY(0px) scale(1)}
+      50%{transform:translateY(-12px) scale(1.03)}
+    }
+    .hero-logo-wrap{
+      position:relative;
+      display:grid;
+      place-items:center;
+      width:min(72vw, 400px);
+      aspect-ratio:1/1;
+    }
+    .hero-logo-wrap::before{
+      content:"";
+      position:absolute;
+      width:70%;
+      aspect-ratio:1/1;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(163,255,18,.22) 0%, rgba(163,255,18,.08) 35%, transparent 72%);
+      filter:blur(16px);
+      z-index:0;
+      animation:halo 4.5s ease-in-out infinite;
+    }
+    @keyframes halo{
+      0%,100%{transform:scale(1);opacity:.9}
+      50%{transform:scale(1.08);opacity:.6}
+    }
+    .hero-logo{
+      position:relative;
+      z-index:1;
+      width:100px;height:100px;
+      border-radius:50%;
+      object-fit:cover;
+      border:1px solid rgba(163,255,18,.45);
+      box-shadow:
+        0 0 0 8px rgba(163,255,18,.03),
+        0 0 24px rgba(163,255,18,.22),
+        0 0 60px rgba(163,255,18,.12);
+      animation:floatLogo 5s ease-in-out infinite;
+      background:#0b0f14;
+    }
+    @keyframes floatLogo{
+      0%,100%{transform:translateY(0px)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .hero-panel{
+      position:absolute;
+      border:1px solid var(--border-subtle);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      backdrop-filter: blur(10px);
+      border-radius:16px;
+      box-shadow:var(--shadow-soft);
+      padding:12px;
+      min-width:165px;
+    }
+    .hero-panel small{
+      color:var(--text-muted);
+      display:block;
+      font-size:11px;
+      margin-bottom:4px;
+    }
+    .hero-panel strong{
+      font-size:15px;
+      display:block;
+      letter-spacing:-.01em;
+    }
+    .hero-panel .mini{
+      margin-top:8px;
+      height:4px;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(163,255,18,.1), rgba(163,255,18,.55), rgba(163,255,18,.12));
+    }
+    .hero-panel.p1{top:32px;left:16px}
+    .hero-panel.p2{top:110px;right:12px}
+    .hero-panel.p3{bottom:48px;left:36px}
+    .hero-panel.p4{bottom:28px;right:32px}
+
+    /* Stats row */
+    .stats-row{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    .stat-box{
+      border:1px solid var(--border-subtle);
+      border-radius:16px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.015);
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .stat-label{
+      font-size:12px;
+      color:var(--text-muted);
+      text-transform:uppercase;
+      letter-spacing:.09em;
+    }
+    .stat-value{
+      font-family:"Syne", sans-serif;
+      font-size:clamp(20px, 2vw, 28px);
+      font-weight:800;
+      line-height:1;
+      letter-spacing:-.02em;
+    }
+    .stat-value.neon{color:var(--neon-primary);text-shadow:0 0 20px rgba(163,255,18,.22)}
+    .stat-value.green{color:var(--profit-green)}
+    .stat-value.amber{color:var(--warning-amber)}
+
+    /* Marquee */
+    .marquee-wrap{
+      position:relative;
+      overflow:hidden;
+      border-block:1px solid var(--border-subtle);
+      background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.00));
+      margin-top:8px;
+    }
+    .marquee-track{
+      display:flex;
+      width:max-content;
+      gap:12px;
+      padding:14px 0;
+      animation: marquee 28s linear infinite;
+      will-change:transform;
+    }
+    .marquee-wrap:hover .marquee-track{animation-play-state:paused}
+    @keyframes marquee{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-50%)}
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--border-subtle);
+      background:rgba(255,255,255,.015);
+      color:var(--text-secondary);
+      white-space:nowrap;
+      font-size:14px;
+    }
+    .pill::before{
+      content:"";
+      width:7px;height:7px;border-radius:50%;
+      background:rgba(163,255,18,.85);
+      box-shadow:0 0 10px rgba(163,255,18,.4);
+    }
+
+    /* Cards common */
+    .card{
+      border:1px solid var(--border-subtle);
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.008));
+      box-shadow:var(--shadow-soft);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-30% auto auto -20%;
+      width:160px;height:160px;
+      border-radius:50%;
+      filter:blur(24px);
+      opacity:.06;
+      pointer-events:none;
+      background:var(--neon-primary);
+    }
+
+    /* Scroll reveal */
+    .reveal{
+      opacity:0;
+      transform:translateY(18px);
+      transition:opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* Ecosystem grid */
+    .ecosystem-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+    }
+    .eco-card{
+      padding:18px;
+      min-height:200px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+      isolation:isolate;
+    }
+    .eco-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(255,255,255,.14);
+      box-shadow:0 0 0 1px rgba(255,255,255,.03), 0 20px 44px rgba(0,0,0,.35);
+    }
+    .eco-card .glow{
+      position:absolute;
+      inset:auto;
+      width:220px;height:220px;
+      border-radius:50%;
+      filter:blur(28px);
+      opacity:0;
+      transition:opacity .22s ease;
+      pointer-events:none;
+      z-index:0;
+      right:-40px; top:-40px;
+    }
+    .eco-card:hover .glow{opacity:.18}
+    .eco-card > *{position:relative;z-index:1}
+    .eco-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .eco-title{
+      font-family:"Syne", sans-serif;
+      font-weight:800;
+      font-size:clamp(22px, 2.1vw, 30px);
+      margin:0;
+      letter-spacing:-.02em;
+    }
+    .eco-kicker{
+      color:var(--text-secondary);
+      font-weight:600;
+      font-size:13px;
+      margin-top:6px;
+    }
+    .eco-desc{
+      margin:12px 0 0;
+      color:var(--text-secondary);
+      max-width:42ch;
+    }
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .tag{
+      border-radius:999px;
+      border:1px solid var(--border-subtle);
+      padding:7px 10px;
+      font-size:12px;
+      color:var(--text-secondary);
+      background:rgba(255,255,255,.015);
+    }
+
+    /* Alpha signals */
+    .signal-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+    }
+    .signal-card{
+      min-height:220px;
+      display:flex;
+      flex-direction:column;
+      transition: transform .2s ease, border-color .2s ease;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.005)),
+        var(--bg, radial-gradient(circle at 30% 20%, rgba(163,255,18,.09), transparent 65%));
+    }
+    .signal-card:hover{
+      transform:translateY(-3px);
+      border-color:rgba(255,255,255,.14);
+    }
+    .signal-card .top-bar{
+      height:3px;
+      width:100%;
+      background:linear-gradient(90deg, transparent 0%, var(--bar, var(--neon-primary)) 35%, transparent 100%);
+      opacity:0;
+      transition:opacity .2s ease;
+    }
+    .signal-card:hover .top-bar{opacity:1}
+    .signal-content{padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      font-size:12px;
+      border-radius:999px;
+      padding:7px 10px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(0,0,0,.2);
+      color:#fff;
+    }
+    .badge::before{
+      content:"";
+      width:6px;height:6px;border-radius:50%;
+      background:currentColor;
+      box-shadow:0 0 10px currentColor;
+      opacity:.85;
+    }
+    .signal-title{
+      margin:0;
+      font-family:"Syne", sans-serif;
+      font-weight:700;
+      font-size:22px;
+      letter-spacing:-.02em;
+      line-height:1.02;
+    }
+    .signal-desc{
+      margin:0;
+      color:var(--text-secondary);
+      font-size:14px;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      min-height:40px;
+    }
+    .signal-meta{
+      margin-top:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--text-muted);
+      font-size:12px;
+    }
+    .avatars{
+      display:flex;
+      align-items:center;
+      margin-left:auto;
+    }
+    .av{
+      width:22px;height:22px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      display:grid;place-items:center;
+      font-size:10px;font-weight:700;color:#fff;
+      margin-left:-6px;
+      background:linear-gradient(135deg, rgba(163,255,18,.35), rgba(0,229,255,.25));
+      backdrop-filter: blur(4px);
+    }
+    .av:first-child{margin-left:0}
+
+    /* Strategies */
+    .strategy-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+    }
+    .strategy-card{
+      overflow:hidden;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .strategy-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(255,255,255,.16);
+    }
+    .strategy-hero{
+      position:relative;
+      height:118px;
+      border-bottom:1px solid var(--border-subtle);
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
+        #0d1219;
+      overflow:hidden;
+    }
+    .strategy-hero::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(110deg,
+          transparent 10%,
+          rgba(255,255,255,.035) 20%,
+          rgba(163,255,18,.08) 28%,
+          rgba(255,255,255,.03) 36%,
+          transparent 46%);
+      transform:translateX(-120%);
+      animation:shimmer 3.2s linear infinite;
+    }
+    @keyframes shimmer{
+      100%{transform:translateX(140%)}
+    }
+    .pnl-badge{
+      position:absolute; left:10px; top:10px;
+      font-size:12px; font-weight:700;
+      color:#dfffe0;
+      background:rgba(0,200,83,.12);
+      border:1px solid rgba(0,200,83,.28);
+      padding:7px 10px;
+      border-radius:999px;
+      backdrop-filter: blur(6px);
+    }
+    .likes-badge{
+      position:absolute; right:10px; top:10px;
+      font-size:12px; font-weight:600;
+      color:#fff;
+      background:rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.09);
+      padding:7px 9px;
+      border-radius:999px;
+    }
+    .strategy-body{padding:12px}
+    .author-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .author{
+      display:flex;align-items:center;gap:8px;min-width:0;
+    }
+    .author-av{
+      width:28px;height:28px;border-radius:50%;
+      display:grid;place-items:center;
+      font-weight:700;font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+      background:linear-gradient(135deg, rgba(163,255,18,.22), rgba(0,229,255,.17));
+      flex:0 0 auto;
+    }
+    .author-name{
+      font-size:12px;
+      color:var(--text-secondary);
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      max-width:110px;
+    }
+    .tier{
+      font-size:11px;
+      border-radius:999px;
+      padding:5px 8px;
+      border:1px solid rgba(255,255,255,.1);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:700;
+    }
+    .tier.gold{
+      color:#1a1200;
+      background:linear-gradient(135deg, #f6d36a, #d9a126);
+      border-color:rgba(246,196,83,.35);
+    }
+    .tier.platinum{
+      color:#0a1418;
+      background:linear-gradient(135deg, #c6fbff, #7de4f7);
+      border-color:rgba(125,228,247,.35);
+    }
+    .strategy-title{
+      margin:0;
+      font-family:"Syne", sans-serif;
+      font-weight:700;
+      letter-spacing:-.02em;
+      font-size:18px;
+      line-height:1.05;
+      min-height:38px;
+    }
+    .strategy-sub{
+      margin:6px 0 0;
+      color:var(--text-secondary);
+      font-size:13px;
+      min-height:18px;
+    }
+    .strategy-stats{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--text-muted);
+      font-size:12px;
+    }
+
+    /* Token + tiers */
+    .token-tier-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:14px;
+    }
+    .token-card, .tiers-card{
+      padding:18px;
+    }
+    .token-card .section-title,
+    .tiers-card .section-title{
+      margin-bottom:8px;
+      font-size:clamp(24px, 2.2vw, 34px);
+    }
+    .metrics-grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+    .metric{
+      border:1px solid var(--border-subtle);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.012);
+    }
+    .metric span{
+      display:block;
+      color:var(--text-muted);
+      font-size:12px;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+    }
+    .metric strong{
+      display:block;
+      font-family:"Syne", sans-serif;
+      font-size:26px;
+      line-height:1;
+      letter-spacing:-.02em;
+    }
+
+    .tiers-table{
+      margin-top:10px;
+      border:1px solid var(--border-subtle);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(255,255,255,.01);
+    }
+    .tier-row{
+      display:grid;
+      grid-template-columns: 1.1fr 1fr 1fr 1.3fr;
+      gap:0;
+      align-items:center;
+      min-height:58px;
+      border-top:1px solid var(--border-subtle);
+    }
+    .tier-row:first-child{border-top:none}
+    .tier-row > div{
+      padding:12px 12px;
+      font-size:13px;
+      color:var(--text-secondary);
+      border-left:1px solid rgba(255,255,255,.03);
+    }
+    .tier-row > div:first-child{border-left:none}
+    .tier-row.head{
+      background:rgba(255,255,255,.02);
+      min-height:46px;
+    }
+    .tier-row.head > div{
+      color:var(--text-muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      font-weight:700;
+    }
+    .tier-name{
+      display:flex;align-items:center;gap:8px;
+      color:#fff !important;
+      font-weight:700;
+    }
+    .tier-chip{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--neon-primary);
+      box-shadow:0 0 10px rgba(163,255,18,.35);
+      flex:0 0 auto;
+    }
+    .tier-chip.free{background:#77808f;box-shadow:none}
+    .tier-chip.bronze{background:#C27C52}
+    .tier-chip.silver{background:#C4CDD7}
+    .tier-chip.gold{background:#F6C453}
+    .tier-chip.platinum{background:#7DE4F7}
+
+    /* Chains bar */
+    .chains-bar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
+      padding:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.005));
+    }
+    .chain-pill{
+      padding:9px 12px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      color:var(--text-secondary);
+      font-weight:600;
+      font-size:13px;
+      background:rgba(255,255,255,.01);
+    }
+
+    /* CTA banner */
+    .cta-banner{
+      position:relative;
+      overflow:hidden;
+      padding:26px;
+      border-radius:22px;
+      border:1px solid rgba(163,255,18,.22);
+      background:
+        radial-gradient(800px 200px at 20% 20%, rgba(163,255,18,.12), transparent 60%),
+        radial-gradient(700px 200px at 90% 80%, rgba(0,229,255,.08), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.008)),
+        #0a0f11;
+      box-shadow:0 0 0 1px rgba(163,255,18,.06), 0 12px 38px rgba(0,0,0,.35), inset 0 0 50px rgba(163,255,18,.025);
+    }
+    .cta-banner::after{
+      content:"";
+      position:absolute;
+      inset:-20% auto auto -10%;
+      width:280px;height:280px;
+      border-radius:50%;
+      background:rgba(163,255,18,.13);
+      filter:blur(44px);
+      opacity:.35;
+      pointer-events:none;
+    }
+    .cta-grid{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:18px;
+      align-items:center;
+    }
+    .cta-title{
+      margin:0;
+      font-family:"Syne", sans-serif;
+      font-size:clamp(28px, 3.2vw, 44px);
+      line-height:.98;
+      letter-spacing:-.02em;
+      font-weight:800;
+    }
+    .cta-sub{
+      margin:10px 0 0;
+      color:var(--text-secondary);
+    }
+    .cta-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    /* Footer */
+    footer{
+      padding:32px 0 42px;
+      border-top:1px solid var(--border-subtle);
+      background:linear-gradient(180deg, transparent, rgba(255,255,255,.008));
+      margin-top:8px;
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns: 1.25fr 1fr 1fr 1fr;
+      gap:18px;
+    }
+    .footer-brand{
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,.01);
+    }
+    .footer-brand-head{
+      display:flex;align-items:center;gap:10px;margin-bottom:10px;
+    }
+    .footer-brand-head img{
+      width:32px;height:32px;border-radius:50%;object-fit:cover;
+      border:1px solid rgba(163,255,18,.35);
+      box-shadow:0 0 14px rgba(163,255,18,.12);
+    }
+    .footer-brand p{
+      margin:0;color:var(--text-secondary);font-size:14px;
+    }
+    .socials{
+      display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;
+    }
+    .soc{
+      width:34px;height:34px;border-radius:10px;
+      border:1px solid var(--border-subtle);
+      display:grid;place-items:center;
+      color:var(--text-secondary);
+      background:rgba(255,255,255,.01);
+      transition:.2s ease;
+      font-family:"Space Mono", monospace;
+      font-size:12px;
+    }
+    .soc:hover{
+      color:#fff;border-color:rgba(163,255,18,.3);
+      box-shadow:0 0 18px rgba(163,255,18,.08);
+    }
+    .footer-col{
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,.01);
+    }
+    .footer-col h4{
+      margin:0 0 10px;
+      font-family:"Syne", sans-serif;
+      font-size:16px;
+      letter-spacing:-.01em;
+    }
+    .footer-links{
+      display:grid;gap:8px;
+    }
+    .footer-links a{
+      color:var(--text-secondary);
+      font-size:14px;
+      transition:.2s ease;
+    }
+    .footer-links a:hover{color:#fff}
+
+    .footer-bottom{
+      margin-top:16px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--text-muted);
+      font-size:12px;
+    }
+
+    /* Modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:1200;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
+    }
+    .modal.open{display:flex}
+    .modal-panel{
+      width:min(560px, 100%);
+      border:1px solid var(--border-subtle);
+      border-radius:22px;
+      background:
+        radial-gradient(460px 160px at 15% 0%, rgba(163,255,18,.07), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)),
+        #090d12;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      overflow:hidden;
+    }
+    .modal-head{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;padding:16px;border-bottom:1px solid var(--border-subtle);
+    }
+    .modal-title{
+      margin:0;
+      font-family:"Syne", sans-serif;
+      font-weight:700;
+      font-size:22px;
+      letter-spacing:-.02em;
+    }
+    .icon-btn{
+      width:36px;height:36px;border-radius:12px;
+      border:1px solid var(--border-subtle);
+      background:rgba(255,255,255,.02);
+      color:var(--text-secondary);
+      display:grid;place-items:center;
+      cursor:pointer;
+    }
+    .icon-btn:hover{color:#fff;border-color:rgba(163,255,18,.25)}
+    .modal-body{padding:16px;display:grid;gap:12px}
+    .wallet-option{
+      width:100%;
+      border:1px solid var(--border-subtle);
+      border-radius:16px;
+      background:rgba(255,255,255,.01);
+      padding:14px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      cursor:pointer;
+      color:#fff;
+      transition:.2s ease;
+      text-align:left;
+    }
+    .wallet-option:hover{
+      border-color:rgba(163,255,18,.25);
+      box-shadow:0 0 0 1px rgba(163,255,18,.08), inset 0 0 30px rgba(163,255,18,.02);
+    }
+    .wallet-option-left{
+      display:flex;align-items:center;gap:12px;min-width:0;
+    }
+    .wallet-icon{
+      width:34px;height:34px;border-radius:12px;
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.02);
+      font-family:"Space Mono", monospace;
+      font-size:13px;font-weight:700;
+      color:#fff;
+      flex:0 0 auto;
+    }
+    .wallet-option h5{
+      margin:0;font-size:15px;font-weight:700;
+    }
+    .wallet-option p{
+      margin:3px 0 0;color:var(--text-secondary);font-size:12px;
+    }
+    .wallet-chevron{
+      color:var(--text-muted);
+      font-family:"Space Mono", monospace;
+      font-size:14px;
+    }
+
+    .wallet-state{
+      border:1px solid var(--border-subtle);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(255,255,255,.01);
+      display:none;
+      gap:10px;
+    }
+    .wallet-state.active{display:grid}
+    .state-row{
+      display:flex;justify-content:space-between;gap:12px;
+      border-top:1px solid rgba(255,255,255,.04);
+      padding-top:8px;
+    }
+    .state-row:first-child{border-top:none;padding-top:0}
+    .state-k{
+      color:var(--text-muted);font-size:12px;
+    }
+    .state-v{
+      color:#fff;font-weight:600;font-size:13px;text-align:right;
+      word-break:break-all;
+    }
+
+    .status-box{
+      display:none;
+      border-radius:14px;
+      padding:12px;
+      font-size:13px;
+      line-height:1.35;
+      border:1px solid transparent;
+    }
+    .status-box.show{display:block}
+    .status-box.error{
+      background:rgba(255,59,59,.09);
+      border-color:rgba(255,59,59,.22);
+      color:#ffd5d5;
+    }
+    .status-box.info{
+      background:rgba(163,255,18,.06);
+      border-color:rgba(163,255,18,.18);
+      color:#e8ffbf;
+    }
+
+    .spinner{
+      width:16px;height:16px;border-radius:50%;
+      border:2px solid rgba(255,255,255,.2);
+      border-top-color:var(--neon-primary);
+      animation:spin .8s linear infinite;
+      display:none;
+      flex:0 0 auto;
+    }
+    .spinner.show{display:inline-block}
+    @keyframes spin{
+      to{transform:rotate(360deg)}
+    }
+
+    .tiny-note{
+      color:var(--text-muted);
+      font-size:11px;
+      line-height:1.35;
+    }
+
+    /* Decorative headers */
+    .section-header-row{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .section-label{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--text-muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .section-label::before{
+      content:"";
+      width:7px;height:7px;border-radius:50%;
+      background:rgba(163,255,18,.85);
+      box-shadow:0 0 8px rgba(163,255,18,.35);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px){
+      :root{ --nav-h:72px; }
+      .nav-links{display:none}
+      .nav-actions .btn-neon{display:none}
+      .hero-grid{
+        grid-template-columns:1fr;
+        gap:14px;
+        padding:18px;
+      }
+      .hero-visual{
+        min-height:200px;
+        order:-1;
+      }
+      .hero-panel{display:none}
+      .hero-logo-wrap{width:min(45vw,200px)}
+      .hero-logo{width:80px;height:80px}
+      .stats-row{grid-template-columns:repeat(2, 1fr)}
+      .ecosystem-grid,
+      .signal-grid,
+      .strategy-grid,
+      .token-tier-grid,
+      .footer-grid{
+        grid-template-columns:1fr;
+      }
+      .cta-grid{
+        grid-template-columns:1fr;
+      }
+      .cta-actions{justify-content:flex-start}
+      .tier-row{
+        grid-template-columns: 1.1fr .9fr .9fr 1.1fr;
+      }
+      .wallet-pill{
+        max-width:200px;
+      }
+      .wallet-pill-text span{
+        display:none;
+      }
+    }
+
+    @media (max-width: 540px){
+      .container{width:min(100vw - 20px, 1240px)}
+      section{padding:26px 0}
+      .hero-shell{border-radius:22px}
+      .hero-grid{padding:14px}
+      .hero-badge{font-size:12px;padding:8px 10px}
+      .hero-logo{width:90px;height:90px}
+      .mode-toggle{width:100%}
+      .mode-toggle button{flex:1}
+      .stats-row{grid-template-columns:1fr}
+      .stat-box{padding:12px}
+      .pill{padding:8px 12px;font-size:13px}
+      .eco-card{min-height:unset}
+      .signal-card{min-height:205px}
+      .strategy-hero{height:106px}
+      .tier-row, .tier-row.head{
+        grid-template-columns:1fr;
+      }
+      .tier-row > div{
+        border-left:none;
+        border-top:1px solid rgba(255,255,255,.03);
+        padding:8px 12px;
+      }
+      .tier-row > div:first-child{border-top:none}
+      .tier-row.head{display:none}
+      .footer-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .nav-actions .btn-outline{padding:10px 12px}
+      .brand-name{font-size:16px}
+      .wallet-pill{max-width:160px;padding:8px 10px}
+      .wallet-pill-text strong{font-size:12px}
+    }
+    /* Hamburger menu */
+    .burger-btn{
+      display:none;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--border-subtle);
+      border-radius:10px;
+      padding:8px 10px;
+      cursor:pointer;
+      flex-direction:column;
+      gap:4px;
+      align-items:center;
+      justify-content:center;
+    }
+    .burger-btn span{
+      display:block;
+      width:20px;height:2px;
+      background:var(--white-primary);
+      border-radius:2px;
+      transition:.25s ease;
+    }
+    .burger-btn.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .burger-btn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+    .burger-btn.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+    .mobile-menu{
+      display:none;
+      position:fixed;
+      top:var(--nav-h);
+      left:0;right:0;
+      background:rgba(11,15,20,.97);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border-subtle);
+      z-index:999;
+      padding:12px 16px 18px;
+      flex-direction:column;
+      gap:4px;
+    }
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{
+      padding:12px 14px;
+      border-radius:12px;
+      color:var(--text-secondary);
+      font-size:15px;
+      font-weight:600;
+      transition:.2s ease;
+      border:1px solid transparent;
+    }
+    .mobile-menu a:hover, .mobile-menu a.active{
+      color:#fff;
+      background:rgba(163,255,18,.05);
+      border-color:rgba(163,255,18,.2);
+    }
+
+    /* Active nav link */
+    .nav-links a.active{
+      color:#fff;
+      background:rgba(163,255,18,.06);
+      border-radius:999px;
+      box-shadow:inset 0 0 14px rgba(163,255,18,.05);
+    }
+
+    /* Stat count-up */
+    .stat-value[data-target]{
+      transition:color .3s ease;
+    }
+
+    /* ============================================================
+       NEW SECTIONS CSS
+       ============================================================ */
+
+    /* Flow diagram */
+    .flow-diagram{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:0;
+      margin:20px 0 0;
+    }
+    .flow-step{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .flow-node{
+      border:1px solid var(--border-subtle);
+      border-radius:10px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:600;
+      color:var(--text-secondary);
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+    .flow-node.hl{
+      border-color:rgba(163,255,18,.35);
+      color:var(--neon-primary);
+      background:rgba(163,255,18,.04);
+    }
+    .flow-node.risk{
+      border-color:rgba(255,59,59,.35);
+      color:#FF8A8A;
+      background:rgba(255,59,59,.05);
+    }
+    .flow-arrow{
+      color:var(--text-muted);
+      font-size:14px;
+      margin:0 4px;
+    }
+
+    /* Mini dashboard widget */
+    .mini-dashboard{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:20px;
+    }
+    .mini-dash-cell{
+      border:1px solid var(--border-subtle);
+      border-radius:14px;
+      padding:12px 14px;
+      background:rgba(255,255,255,.012);
+    }
+    .mini-dash-cell .label{
+      font-size:11px;
+      color:var(--text-muted);
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      margin-bottom:4px;
+    }
+    .mini-dash-cell .value{
+      font-family:"Syne",sans-serif;
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:-.01em;
+    }
+    .mini-dash-cell .value.green{color:var(--profit-green)}
+    .mini-dash-cell .value.neon{color:var(--neon-primary)}
+    .mini-dash-cell .value.red{color:var(--crisis-red)}
+    .mini-dash-cell .value.amber{color:var(--warning-amber)}
+
+    /* Two-column premium section */
+    .premium-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      align-items:start;
+    }
+    .premium-grid.reverse > *:first-child{order:2}
+    .premium-grid.reverse > *:last-child{order:1}
+
+    .premium-card{
+      border:1px solid var(--border-subtle);
+      border-radius:24px;
+      padding:28px;
+      background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006));
+      box-shadow:var(--shadow-soft);
+      position:relative;
+      overflow:hidden;
+    }
+    .premium-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:24px;
+      pointer-events:none;
+      background:linear-gradient(135deg,rgba(163,255,18,.12),transparent 40%,transparent 65%,rgba(0,229,255,.08));
+      mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      padding:1px;
+      mask-composite:exclude;
+      -webkit-mask-composite:xor;
+      opacity:.55;
+    }
+    .premium-card.accent-red::before{
+      background:linear-gradient(135deg,rgba(255,59,59,.18),transparent 40%,transparent 65%,rgba(255,159,10,.10));
+    }
+    .premium-card.accent-cyan::before{
+      background:linear-gradient(135deg,rgba(0,229,255,.16),transparent 40%,transparent 65%,rgba(163,255,18,.08));
+    }
+    .premium-card.accent-gold::before{
+      background:linear-gradient(135deg,rgba(246,196,83,.18),transparent 40%,transparent 65%,rgba(255,159,10,.10));
+    }
+    .premium-card.accent-pink::before{
+      background:linear-gradient(135deg,rgba(255,51,136,.16),transparent 40%,transparent 65%,rgba(255,59,59,.10));
+    }
+
+    .premium-card-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--text-muted);
+      margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .premium-card-label::before{
+      content:"";
+      width:6px;height:6px;border-radius:50%;
+      background:var(--neon-primary);
+      box-shadow:0 0 8px rgba(163,255,18,.5);
+    }
+    .premium-card-label.red::before{background:var(--crisis-red);box-shadow:0 0 8px rgba(255,59,59,.5)}
+    .premium-card-label.cyan::before{background:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.5)}
+    .premium-card-label.gold::before{background:var(--gold);box-shadow:0 0 8px rgba(246,196,83,.5)}
+    .premium-card-label.pink::before{background:var(--pink);box-shadow:0 0 8px rgba(255,51,136,.5)}
+
+    .premium-card h3{
+      font-family:"Syne",sans-serif;
+      font-weight:800;
+      font-size:clamp(22px,2.2vw,30px);
+      letter-spacing:-.025em;
+      line-height:1.05;
+      margin:0 0 10px;
+    }
+    .premium-card p{
+      color:var(--text-secondary);
+      margin:0 0 18px;
+      font-size:15px;
+    }
+    .feature-list{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .feature-list li{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      font-size:14px;
+      color:var(--text-secondary);
+      line-height:1.4;
+    }
+    .feature-list li::before{
+      content:"→";
+      color:var(--neon-primary);
+      flex:0 0 auto;
+      margin-top:1px;
+      font-size:13px;
+    }
+    .feature-list.red li::before{color:var(--crisis-red)}
+    .feature-list.cyan li::before{color:var(--cyan)}
+    .feature-list.gold li::before{color:var(--gold)}
+    .feature-list.pink li::before{color:var(--pink)}
+
+    /* Protection agent visual */
+    .protection-pipeline{
+      margin-top:20px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .pipe-step{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      border:1px solid var(--border-subtle);
+      border-radius:12px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.012);
+      transition:.2s ease;
+    }
+    .pipe-step:hover{
+      border-color:rgba(255,59,59,.3);
+      background:rgba(255,59,59,.03);
+    }
+    .pipe-num{
+      width:24px;height:24px;border-radius:50%;
+      display:grid;place-items:center;
+      font-size:11px;font-weight:700;
+      background:rgba(255,59,59,.12);
+      color:#FF8A8A;
+      border:1px solid rgba(255,59,59,.22);
+      flex:0 0 auto;
+    }
+    .pipe-name{
+      font-weight:600;
+      font-size:13px;
+      color:#fff;
+      min-width:80px;
+    }
+    .pipe-desc{
+      font-size:12px;
+      color:var(--text-muted);
+    }
+    .pipe-badge{
+      margin-left:auto;
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,59,59,.22);
+      color:#FF8A8A;
+      background:rgba(255,59,59,.06);
+      white-space:nowrap;
+    }
+
+    /* Risk engine */
+    .risk-authority-bar{
+      margin-top:20px;
+      border:1px solid rgba(255,59,59,.25);
+      border-radius:16px;
+      padding:16px 18px;
+      background:rgba(255,59,59,.04);
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .risk-authority-icon{
+      width:38px;height:38px;border-radius:10px;
+      background:rgba(255,59,59,.12);
+      border:1px solid rgba(255,59,59,.25);
+      display:grid;place-items:center;
+      flex:0 0 auto;
+      font-size:16px;
+    }
+    .risk-authority-text strong{
+      display:block;
+      color:#fff;
+      font-size:14px;
+      font-weight:700;
+    }
+    .risk-authority-text span{
+      font-size:12px;
+      color:var(--text-muted);
+    }
+    .risk-mode-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+    .risk-mode{
+      border:1px solid var(--border-subtle);
+      border-radius:12px;
+      padding:11px 13px;
+      background:rgba(255,255,255,.01);
+    }
+    .risk-mode-name{
+      font-size:12px;font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:4px;
+    }
+    .risk-mode-name.green{color:var(--profit-green)}
+    .risk-mode-name.amber{color:var(--warning-amber)}
+    .risk-mode-name.red{color:var(--crisis-red)}
+    .risk-mode-desc{font-size:11px;color:var(--text-muted);line-height:1.35}
+
+    /* Roadmap */
+    .roadmap-track{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      position:relative;
+    }
+    .roadmap-card{
+      border:1px solid var(--border-subtle);
+      border-radius:20px;
+      padding:20px;
+      background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.005));
+      position:relative;
+    }
+    .roadmap-card.active{
+      border-color:rgba(163,255,18,.3);
+      background:linear-gradient(180deg,rgba(163,255,18,.04),rgba(163,255,18,.01));
+    }
+    .roadmap-phase{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--text-muted);
+      margin-bottom:8px;
+    }
+    .roadmap-phase.active{color:var(--neon-primary)}
+    .roadmap-title{
+      font-family:"Syne",sans-serif;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:-.02em;
+      margin:0 0 8px;
+    }
+    .roadmap-goal{
+      font-size:13px;
+      color:var(--text-secondary);
+      margin:0 0 14px;
+    }
+    .roadmap-deliverables{
+      list-style:none;
+      padding:0;margin:0;
+      display:flex;flex-direction:column;gap:6px;
+    }
+    .roadmap-deliverables li{
+      font-size:12px;
+      color:var(--text-muted);
+      display:flex;gap:7px;align-items:flex-start;
+    }
+    .roadmap-deliverables li::before{
+      content:"·";
+      color:var(--neon-primary);
+      font-size:16px;line-height:1;flex:0 0 auto;margin-top:-1px;
+    }
+    .roadmap-kpi{
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.05);
+      font-size:11px;
+      color:var(--text-muted);
+    }
+    .roadmap-kpi strong{color:var(--neon-primary);font-size:13px}
+    .roadmap-status{
+      position:absolute;
+      top:16px;right:16px;
+      font-size:10px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      padding:4px 8px;
+      border-radius:999px;
+    }
+    .roadmap-status.live{
+      background:rgba(163,255,18,.1);
+      border:1px solid rgba(163,255,18,.25);
+      color:var(--neon-primary);
+    }
+    .roadmap-status.building{
+      background:rgba(255,159,10,.08);
+      border:1px solid rgba(255,159,10,.2);
+      color:var(--warning-amber);
+    }
+    .roadmap-status.planned{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--border-subtle);
+      color:var(--text-muted);
+    }
+
+    /* Segments */
+    .segment-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+    }
+    .segment-card{
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
+      padding:18px 16px;
+      background:rgba(255,255,255,.012);
+      transition:.2s ease;
+      cursor:default;
+    }
+    .segment-card:hover{
+      border-color:rgba(163,255,18,.22);
+      background:rgba(163,255,18,.025);
+      transform:translateY(-2px);
+    }
+    .segment-icon{
+      width:36px;height:36px;border-radius:10px;
+      border:1px solid var(--border-subtle);
+      display:grid;place-items:center;
+      font-size:16px;
+      margin-bottom:12px;
+      background:rgba(255,255,255,.02);
+    }
+    .segment-name{
+      font-family:"Syne",sans-serif;
+      font-size:16px;font-weight:800;
+      letter-spacing:-.01em;
+      margin-bottom:5px;
+    }
+    .segment-role{
+      font-size:12px;color:var(--text-muted);margin-bottom:10px;
+    }
+    .segment-prop{
+      font-size:12px;color:var(--text-secondary);line-height:1.4;margin-bottom:12px;
+    }
+    .segment-cta{
+      font-size:12px;font-weight:700;
+      color:var(--neon-primary);
+      display:flex;align-items:center;gap:5px;
+    }
+    .segment-cta::after{content:"→";font-size:11px}
+
+    /* Marketplace economics */
+    .economics-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+    .eco-earn-card{
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
+      padding:20px;
+      background:rgba(255,255,255,.012);
+      transition:.2s ease;
+    }
+    .eco-earn-card:hover{
+      border-color:rgba(163,255,18,.2);
+      transform:translateY(-2px);
+    }
+    .eco-earn-icon{
+      width:40px;height:40px;border-radius:12px;
+      border:1px solid rgba(163,255,18,.2);
+      background:rgba(163,255,18,.06);
+      display:grid;place-items:center;
+      font-size:18px;
+      margin-bottom:13px;
+    }
+    .eco-earn-title{
+      font-family:"Syne",sans-serif;
+      font-size:17px;font-weight:700;
+      letter-spacing:-.01em;
+      margin-bottom:6px;
+    }
+    .eco-earn-desc{
+      font-size:13px;color:var(--text-secondary);line-height:1.45;
+    }
+
+    /* Audit/compliance */
+    .audit-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+    .audit-card{
+      border:1px solid var(--border-subtle);
+      border-radius:16px;
+      padding:16px;
+      background:rgba(255,255,255,.01);
+    }
+    .audit-icon{
+      font-size:20px;margin-bottom:10px;
+    }
+    .audit-title{
+      font-family:"Syne",sans-serif;
+      font-size:15px;font-weight:700;
+      letter-spacing:-.01em;margin-bottom:5px;
+    }
+    .audit-desc{
+      font-size:12px;color:var(--text-secondary);line-height:1.4;
+    }
+
+    /* Institutional CTA */
+    .inst-cta-wrap{
+      border:1px solid rgba(163,255,18,.18);
+      border-radius:28px;
+      padding:40px;
+      background:
+        radial-gradient(900px 400px at 50% -10%,rgba(163,255,18,.06),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,.004));
+      box-shadow:0 0 0 1px rgba(163,255,18,.06), var(--shadow-soft);
+      position:relative;
+      overflow:hidden;
+    }
+    .inst-cta-wrap::before{
+      content:"";
+      position:absolute;
+      inset:-1px;border-radius:28px;
+      pointer-events:none;
+      background:linear-gradient(135deg,rgba(163,255,18,.15),transparent 35%,transparent 68%,rgba(0,229,255,.10));
+      mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      padding:1px;mask-composite:exclude;-webkit-mask-composite:xor;opacity:.6;
+    }
+    .inst-cta-grid{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:32px;
+      align-items:center;
+    }
+    .inst-cta-label{
+      font-size:11px;text-transform:uppercase;letter-spacing:.14em;
+      color:var(--neon-primary);margin-bottom:10px;
+    }
+    .inst-cta-title{
+      font-family:"Syne",sans-serif;
+      font-weight:800;
+      font-size:clamp(24px,2.8vw,38px);
+      letter-spacing:-.025em;
+      line-height:1.05;
+      margin:0 0 10px;
+    }
+    .inst-cta-sub{
+      color:var(--text-secondary);
+      max-width:560px;
+      margin:0 0 20px;
+    }
+    .inst-cta-tags{
+      display:flex;flex-wrap:wrap;gap:8px;
+    }
+    .inst-tag{
+      border:1px solid rgba(163,255,18,.2);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      color:var(--text-secondary);
+      background:rgba(163,255,18,.03);
+      white-space:nowrap;
+    }
+    .inst-cta-actions{
+      display:flex;flex-direction:column;gap:10px;min-width:180px;
+    }
+
+    /* Why GEBRID diff grid */
+    .diff-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:18px;
+    }
+    .diff-card{
+      border:1px solid var(--border-subtle);
+      border-radius:14px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.01);
+    }
+    .diff-check{
+      display:inline-block;
+      width:20px;height:20px;border-radius:6px;
+      background:rgba(163,255,18,.1);
+      border:1px solid rgba(163,255,18,.25);
+      text-align:center;line-height:20px;
+      font-size:11px;color:var(--neon-primary);
+      margin-bottom:8px;
+    }
+    .diff-title{
+      font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;
+    }
+    .diff-desc{
+      font-size:12px;color:var(--text-muted);line-height:1.4;
+    }
+
+    /* Responsive new sections */
+    @media(max-width:900px){
+      .premium-grid,.premium-grid.reverse{grid-template-columns:1fr}
+      .premium-grid.reverse > *:first-child{order:unset}
+      .premium-grid.reverse > *:last-child{order:unset}
+      .mini-dashboard{grid-template-columns:repeat(2,1fr)}
+      .roadmap-track{grid-template-columns:repeat(2,1fr)}
+      .segment-grid{grid-template-columns:repeat(2,1fr)}
+      .economics-grid{grid-template-columns:1fr}
+      .audit-grid{grid-template-columns:repeat(2,1fr)}
+      .diff-grid{grid-template-columns:repeat(2,1fr)}
+      .inst-cta-grid{grid-template-columns:1fr}
+      .inst-cta-actions{flex-direction:row;flex-wrap:wrap}
+      .risk-mode-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:540px){
+      .roadmap-track{grid-template-columns:1fr}
+      .segment-grid{grid-template-columns:1fr}
+      .audit-grid{grid-template-columns:1fr}
+      .diff-grid{grid-template-columns:1fr}
+      .flow-diagram{gap:4px}
+      .premium-card{padding:20px}
+      .inst-cta-wrap{padding:22px 18px}
+      .risk-mode-grid{grid-template-columns:1fr}
+      .mini-dashboard{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 900px){
+      .burger-btn{display:flex}
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <div class="nav-wrap">
+    <div class="container nav">
+      <a href="#top" class="brand" aria-label="GEBRID home">
+        <img src="gebrid-logo.jpg" alt="GEBRID logo" onerror="this.outerHTML='<div style=\'width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#A3FF12,#00E5FF);display:grid;place-items:center;font-family:Syne,sans-serif;font-weight:800;font-size:15px;color:#0B0F14;flex:0 0 auto;\'>G</div>'" />
+        <div>
+          <div class="brand-name">GEBRID</div>
+          <span class="brand-sub">Agent OS for Capital</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#ecosystem">Ecosystem</a>
+        <a href="#trading-ai">Alpha Engine</a>
+        <a href="#rwa-ai">RWA AI</a>
+        <a href="#treasury-cards">Cards</a>
+        <a href="#protection">Protection</a>
+        <a href="#docs">Docs</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="burgerBtn" class="burger-btn" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <div id="walletPill" class="wallet-pill" aria-live="polite">
+          <span class="wallet-status-dot"></span>
+          <div class="wallet-pill-text">
+            <strong id="walletPillAddress">0x0000...0000</strong>
+            <span id="walletPillChain">Not connected</span>
+          </div>
+        </div>
+        <button id="openWalletBtn" class="btn btn-outline btn-sm" type="button">Connect Wallet</button>
+        <button id="launchAppNavBtn" class="btn btn-neon btn-sm" type="button" aria-label="Launch App">Launch App</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE NAV MENU -->
+  <nav id="mobileMenu" class="mobile-menu" aria-label="Mobile navigation">
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#trading-ai">Alpha Engine</a>
+    <a href="#rwa-ai">RWA AI</a>
+    <a href="#treasury-cards">Cards</a>
+    <a href="#protection">Protection</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#docs">Docs</a>
+  </nav>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-shell reveal">
+          <div class="hero-grid">
+            <div>
+              <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                <span>GEBRID Protocol v2.0 — Live on 12 Chains</span>
+              </div>
+
+              <h1>
+                Build, route, and protect
+                <span class="neon-text">AI agents for capital</span>
+              </h1>
+
+              <p>
+                GEBRID OS is the AI-native operating system for on-chain capital — where agent swarms execute trading, RWA, and treasury workflows under institutional-grade controls, with policy-based protection built into every transaction.
+              </p>
+
+              <div class="hero-cta">
+                <button id="heroConnectBtn" class="btn btn-neon btn-lg" type="button">Connect &amp; Start Building</button>
+                <a class="btn btn-outline btn-lg" href="#docs">Read Whitepaper →</a>
+              </div>
+
+              <div class="mode-toggle" role="tablist" aria-label="Audience mode">
+                <button class="active" type="button" data-mode="operators" aria-selected="true">Operators</button>
+                <button type="button" data-mode="institutions" aria-selected="false">Institutions</button>
+              </div>
+            </div>
+
+            <div class="hero-visual" aria-hidden="true">
+              <div class="hero-orb"></div>
+
+              <div class="hero-panel p1">
+                <small>Capital Engine</small>
+                <strong>Risk Authority: <span style="color:var(--neon-primary)">ACTIVE</span></strong>
+                <div class="mini"></div>
+              </div>
+
+              <div class="hero-panel p2">
+                <small>Protection Agent</small>
+                <strong>12M attack blocked</strong>
+                <div class="mini"></div>
+              </div>
+
+              <div class="hero-panel p3">
+                <small>Hive Templates</small>
+                <strong>50+ no-code swarms</strong>
+                <div class="mini"></div>
+              </div>
+
+              <div class="hero-panel p4">
+                <small>Routing</small>
+                <strong>Gas savings up to 73%</strong>
+                <div class="mini"></div>
+              </div>
+
+              <div class="hero-logo-wrap">
+                <img class="hero-logo" src="gebrid-logo.jpg" alt="GEBRID logo coin" onerror="this.outerHTML='<div style=\'width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#A3FF12,#00E5FF);display:grid;place-items:center;font-family:Syne,sans-serif;font-weight:800;font-size:32px;color:#0B0F14;border:1px solid rgba(163,255,18,.45);box-shadow:0 0 24px rgba(163,255,18,.22);\'>G</div>'" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row reveal" aria-label="Ecosystem stats">
+          <div class="stat-box">
+            <span class="stat-label">Value Secured</span>
+            <div class="stat-value neon" data-target="2.4" data-prefix="$" data-suffix="B">$2.4B</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Active Agents</span>
+            <div class="stat-value green" data-target="140" data-suffix="K+">140K+</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Operators</span>
+            <div class="stat-value" data-target="50" data-suffix="K+">50K+</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Commission</span>
+            <div class="stat-value amber" data-target="0" data-suffix="%" data-noup="1">0%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section style="padding-top:6px; padding-bottom:18px;">
+      <div class="marquee-wrap reveal" aria-label="GEBRID products ticker">
+        <div class="marquee-track">
+          <!-- duplicated set for infinite loop -->
+          <div class="pill">GEBRID Core</div>
+          <div class="pill">GEBRID Hive</div>
+          <div class="pill">GEBRID OS</div>
+          <div class="pill">GEBRID DePC</div>
+          <div class="pill">Yield Scout</div>
+          <div class="pill">Arb Hunter</div>
+          <div class="pill">Liquidation Guard</div>
+          <div class="pill">Loot Farmer</div>
+          <div class="pill">Market Sniper</div>
+          <div class="pill">Gas Optimizer</div>
+          <div class="pill">Risk Assessor</div>
+          <div class="pill">Rebalancer</div>
+          <div class="pill">Land Scout</div>
+          <div class="pill">Social Agent</div>
+          <div class="pill">Guild Manager</div>
+
+          <div class="pill">GEBRID Core</div>
+          <div class="pill">GEBRID Hive</div>
+          <div class="pill">GEBRID OS</div>
+          <div class="pill">GEBRID DePC</div>
+          <div class="pill">Yield Scout</div>
+          <div class="pill">Arb Hunter</div>
+          <div class="pill">Liquidation Guard</div>
+          <div class="pill">Loot Farmer</div>
+          <div class="pill">Market Sniper</div>
+          <div class="pill">Gas Optimizer</div>
+          <div class="pill">Risk Assessor</div>
+          <div class="pill">Rebalancer</div>
+          <div class="pill">Land Scout</div>
+          <div class="pill">Social Agent</div>
+          <div class="pill">Guild Manager</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ECOSYSTEM GRID -->
+    <section id="ecosystem">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Ecosystem</div>
+            <h2 class="section-title">Four pillars of the GEBRID stack</h2>
+            <p class="section-sub">
+              Modular products for agent lifecycle orchestration, no-code swarm building, institutional capital systems, and talent-powered DePC launch flows.
+            </p>
+          </div>
+        </div>
+
+        <div class="ecosystem-grid">
+          <article class="card eco-card reveal">
+            <div class="glow" style="background:var(--neon-primary);"></div>
+            <div class="eco-top">
+              <div>
+                <h3 class="eco-title" style="color:var(--neon-primary)">GEBRID Core</h3>
+                <div class="eco-kicker">Agent Orchestration</div>
+              </div>
+            </div>
+            <p class="eco-desc">
+              AI agent lifecycle management: creation, permissions, state control, task routing and real-time monitoring in a single orchestration loop.
+            </p>
+            <div class="tags">
+              <span class="tag">Lifecycle</span>
+              <span class="tag">Permissions</span>
+              <span class="tag">Monitor</span>
+            </div>
+          </article>
+
+          <article class="card eco-card reveal">
+            <div class="glow" style="background:var(--cyan);"></div>
+            <div class="eco-top">
+              <div>
+                <h3 class="eco-title" style="color:var(--cyan)">GEBRID Hive</h3>
+                <div class="eco-kicker">Zero-Code Builder</div>
+              </div>
+            </div>
+            <p class="eco-desc">
+              No-code swarm builder: drag-and-drop workflows, 50+ templates, staking-gated access and rapid deployment of agent networks at scale.
+            </p>
+            <div class="tags">
+              <span class="tag">Drag &amp; Drop</span>
+              <span class="tag">Templates</span>
+              <span class="tag">Staking</span>
+            </div>
+          </article>
+
+          <article class="card eco-card reveal">
+            <div class="glow" style="background:var(--profit-green);"></div>
+            <div class="eco-top">
+              <div>
+                <h3 class="eco-title" style="color:var(--profit-green)">GEBRID OS</h3>
+                <div class="eco-kicker">Capital Management</div>
+              </div>
+            </div>
+            <p class="eco-desc">
+              Institutional capital management: risk engine, protection layer, regime analytics, execution controls and audit-first logging for multi-chain deployments.
+            </p>
+            <div class="tags">
+              <span class="tag">Capital</span>
+              <span class="tag">Protection</span>
+              <span class="tag">Analytics</span>
+            </div>
+          </article>
+
+          <article id="depc" class="card eco-card reveal">
+            <div class="glow" style="background:var(--pink);"></div>
+            <div class="eco-top">
+              <div>
+                <h3 class="eco-title" style="color:var(--pink)">GEBRID DePC</h3>
+                <div class="eco-kicker">Talent Launchpad</div>
+              </div>
+            </div>
+            <p class="eco-desc">
+              Creator economy launchpad: Forge → Arena → Launchpad. Talent launch, role assignment, and on-chain career monetization for the next generation of operators.
+            </p>
+            <div class="tags">
+              <span class="tag">Forge</span>
+              <span class="tag">Arena</span>
+              <span class="tag">Launchpad</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         TRADING AI / ALPHA ENGINE
+    ═══════════════════════════════════════════════════ -->
+    <section id="trading-ai">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Trading AI</div>
+            <h2 class="section-title">The Alpha Engine — execution without autonomy risk</h2>
+            <p class="section-sub">AI agents execute strategy logic. They don't author it. Risk Engine holds final authority over every transaction, route, and capital allocation — no exceptions.</p>
+          </div>
+        </div>
+
+        <div class="premium-grid reveal">
+          <div class="premium-card">
+            <div class="premium-card-label">Execution Flow</div>
+            <h3>Signals → Strategy → AI Operator → Risk Engine → Execution → Audit Log</h3>
+            <p>Every execution cycle passes through a deterministic policy stack. Strategy logic is immutable. The Risk Engine can restrict, reroute, or halt any action before settlement.</p>
+            <ul class="feature-list">
+              <li>AI agents operate as execution entities, not strategy authors — logic is locked at deploy</li>
+              <li>Risk Engine has final authority — agents cannot bypass policy constraints</li>
+              <li>Multi-chain route scoring minimizes gas and slippage across 12+ networks</li>
+              <li>Audit-first execution: every action creates an immutable trace before confirmation</li>
+              <li>Blocked actions are logged and surfaced for operator review in real time</li>
+            </ul>
+            <div class="flow-diagram" style="margin-top:18px">
+              <div class="flow-step"><div class="flow-node hl">Signals</div><div class="flow-arrow">→</div></div>
+              <div class="flow-step"><div class="flow-node">Strategy Logic</div><div class="flow-arrow">→</div></div>
+              <div class="flow-step"><div class="flow-node">AI Operator</div><div class="flow-arrow">→</div></div>
+              <div class="flow-step"><div class="flow-node risk">Risk Engine</div><div class="flow-arrow">→</div></div>
+              <div class="flow-step"><div class="flow-node">Execution</div><div class="flow-arrow">→</div></div>
+              <div class="flow-step"><div class="flow-node hl">Audit Log</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="premium-card" style="margin-bottom:14px;padding:0;overflow:hidden;">
+              <div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;">
+                <div class="premium-card-label" style="margin:0">Capital Engine · Live</div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div id="ce-dot" style="width:7px;height:7px;border-radius:50%;background:#A3FF12;box-shadow:0 0 8px #A3FF12;"></div>
+                  <span style="font-size:10px;color:#6b7280;font-family:'Space Mono',monospace;letter-spacing:.08em">RUNNING</span>
+                </div>
+              </div>
+              <!-- NAV + metrics row -->
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="padding:14px 16px;border-right:1px solid rgba(255,255,255,0.05);">
+                  <div style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#6b7280;margin-bottom:4px;font-family:'Space Mono',monospace;">NAV</div>
+                  <div id="ce-nav" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#A3FF12;">$1,284,320</div>
+                  <div id="ce-nav-chg" style="font-size:10px;color:#00C853;margin-top:2px;">+2.4% today</div>
+                </div>
+                <div style="padding:14px 16px;border-right:1px solid rgba(255,255,255,0.05);">
+                  <div style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#6b7280;margin-bottom:4px;font-family:'Space Mono',monospace;">Drawdown</div>
+                  <div id="ce-dd" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#e2e8f0;">-3.2%</div>
+                  <div style="font-size:10px;color:#6b7280;margin-top:2px;">limit 10%</div>
+                </div>
+                <div style="padding:14px 16px;">
+                  <div style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#6b7280;margin-bottom:4px;font-family:'Space Mono',monospace;">Circuit</div>
+                  <div id="ce-circuit" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#A3FF12;">OPEN</div>
+                  <div style="font-size:10px;color:#6b7280;margin-top:2px;">execution ok</div>
+                </div>
+              </div>
+              <!-- Agents row -->
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="padding:10px 16px;border-right:1px solid rgba(255,255,255,0.05);">
+                  <div style="font-size:9px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">Regime</div>
+                  <div id="ce-regime" style="font-size:13px;font-weight:700;color:#A3FF12;font-family:'Space Mono',monospace;">RISK_ON</div>
+                </div>
+                <div style="padding:10px 16px;border-right:1px solid rgba(255,255,255,0.05);">
+                  <div style="font-size:9px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">Alpha Score</div>
+                  <div id="ce-score" style="font-size:13px;font-weight:700;color:#60a5fa;font-family:'Space Mono',monospace;">87/100</div>
+                </div>
+                <div style="padding:10px 16px;">
+                  <div style="font-size:9px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">Blocked</div>
+                  <div id="ce-blocked" style="font-size:13px;font-weight:700;color:#FF3B3B;font-family:'Space Mono',monospace;">3 txs</div>
+                </div>
+              </div>
+              <!-- Drawdown bar -->
+              <div style="padding:10px 16px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                  <span style="font-size:9px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.1em;">Drawdown meter</span>
+                  <span id="ce-dd-pct" style="font-size:9px;color:#6b7280;font-family:'Space Mono',monospace;">3.2% / 10%</span>
+                </div>
+                <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;">
+                  <div id="ce-dd-bar" style="height:100%;width:32%;background:linear-gradient(90deg,#A3FF12,#00C853);border-radius:2px;transition:width .8s ease;"></div>
+                </div>
+              </div>
+              <!-- Live signal feed -->
+              <div id="ce-feed" style="padding:8px 16px 12px;min-height:60px;">
+                <div style="font-size:9px;color:#374151;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Signal feed</div>
+                <div id="ce-feed-items" style="display:flex;flex-direction:column;gap:3px;"></div>
+              </div>
+            </div>
+            <div class="premium-card accent-red">
+              <div class="premium-card-label red">Risk Engine</div>
+              <h3 style="font-size:18px;margin-bottom:8px">Final authority. Always.</h3>
+              <p style="font-size:13px;margin-bottom:0">No agent, strategy, or operator can override a policy-based block. Execution is permitted only when every constraint is satisfied.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         PROTECTION AGENT — STANDALONE
+    ═══════════════════════════════════════════════════ -->
+    <section id="protection">
+      <div class="container">
+
+        <!-- Hero statement -->
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Protection Agent</div>
+            <h2 class="section-title">The last line between intent and irreversibility.</h2>
+            <p class="section-sub">On-chain execution is final. GEBRID's Protection Agent intercepts every transaction before it touches the chain — parsing intent, simulating outcomes, and enforcing policy before a single byte is signed.</p>
+          </div>
+          <!-- stat callout -->
+          <div style="flex:0 0 auto;border:1px solid rgba(255,59,59,.22);border-radius:18px;padding:18px 22px;background:rgba(255,59,59,.04);text-align:right;min-width:170px;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#FF8A8A;margin-bottom:6px;">$7B+</div>
+            <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;line-height:1.3">Lost to DeFi exploits<br>since 2020</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Most were preventable.</div>
+          </div>
+        </div>
+
+        <!-- Pipeline table -->
+        <div class="premium-card accent-red reveal" style="margin-bottom:14px">
+          <div class="premium-card-label red">Five-Stage Evaluation Pipeline</div>
+          <p style="font-size:14px;margin-bottom:18px">The Protection Agent runs as a mandatory pre-execution layer. It cannot be bypassed by agents or operators — policy is the only authority that permits execution.</p>
+          <div class="protection-pipeline">
+            <div class="pipe-step">
+              <div class="pipe-num">1</div>
+              <div class="pipe-name">DECODE</div>
+              <div class="pipe-desc">Transaction intent is parsed at the calldata level — contract, method, parameters, approval scope. Agents don't see "transfer" — they see exactly what is being authorized and to whom.</div>
+              <div class="pipe-badge">Intent Parsing</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-num">2</div>
+              <div class="pipe-name">SIMULATE</div>
+              <div class="pipe-desc">Execution is fork-simulated in an isolated environment before any on-chain action. Outcomes are known before they're irreversible.</div>
+              <div class="pipe-badge">Dry Run</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-num">3</div>
+              <div class="pipe-name">SCORE</div>
+              <div class="pipe-desc">Risk vectors are evaluated: approval scope, routing deviation, permission escalation, oracle sensitivity. Every transaction has a measurable risk surface — not just a flag.</div>
+              <div class="pipe-badge">Risk Scoring</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-num">4</div>
+              <div class="pipe-name">DECIDE</div>
+              <div class="pipe-desc">Score is compared against the operator's active policy stack — not heuristics, not ML guesses. Deterministic. Auditable. No black box.</div>
+              <div class="pipe-badge">Policy Check</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-num">5</div>
+              <div class="pipe-name">ENFORCE</div>
+              <div class="pipe-desc">Block, reroute, flag, or allow — decision is logged immutably before execution proceeds. The audit trail begins before the transaction, not after.</div>
+              <div class="pipe-badge">Execution Gate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LIVE PROTECTION AGENT SIMULATOR ────────────────── -->
+        <div class="premium-card accent-red reveal" style="margin-bottom:14px;padding:0;overflow:hidden;">
+          <div style="padding:12px 16px;border-bottom:1px solid rgba(255,59,59,.15);display:flex;justify-content:space-between;align-items:center;">
+            <div class="premium-card-label red" style="margin:0;">⚡ Protection Agent · Live Simulator</div>
+            <div style="display:flex;gap:6px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:#FF3B3B;box-shadow:0 0 8px #FF3B3B;animation:pa-pulse 1.4s infinite;"></div>
+              <span style="font-size:10px;color:#6b7280;font-family:'Space Mono',monospace;">INTERCEPTING</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+            <!-- Left: preset transactions -->
+            <div style="padding:14px 16px;border-right:1px solid rgba(255,59,59,.1);">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;font-family:'Space Mono',monospace;margin-bottom:10px;">Test Transaction</div>
+              <div style="display:flex;flex-direction:column;gap:6px;" id="pa-presets">
+                <button onclick="paRunTest('approve')" class="pa-preset-btn" style="text-align:left;background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.15);border-radius:8px;padding:8px 12px;cursor:pointer;transition:.2s;">
+                  <div style="font-size:11px;font-weight:700;color:#FF8A8A;font-family:'Space Mono',monospace;">UNLIMITED APPROVE</div>
+                  <div style="font-size:10px;color:#6b7280;margin-top:2px;">approve(spender, MaxUint256)</div>
+                </button>
+                <button onclick="paRunTest('nft')" class="pa-preset-btn" style="text-align:left;background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.15);border-radius:8px;padding:8px 12px;cursor:pointer;transition:.2s;">
+                  <div style="font-size:11px;font-weight:700;color:#FF8A8A;font-family:'Space Mono',monospace;">SET APPROVAL FOR ALL</div>
+                  <div style="font-size:10px;color:#6b7280;margin-top:2px;">setApprovalForAll(operator, true)</div>
+                </button>
+                <button onclick="paRunTest('swap')" class="pa-preset-btn" style="text-align:left;background:rgba(163,255,18,.04);border:1px solid rgba(163,255,18,.12);border-radius:8px;padding:8px 12px;cursor:pointer;transition:.2s;">
+                  <div style="font-size:11px;font-weight:700;color:#A3FF12;font-family:'Space Mono',monospace;">SAFE SWAP</div>
+                  <div style="font-size:10px;color:#6b7280;margin-top:2px;">swapExactTokens(500 USDC → ETH)</div>
+                </button>
+                <button onclick="paRunTest('ownership')" class="pa-preset-btn" style="text-align:left;background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.15);border-radius:8px;padding:8px 12px;cursor:pointer;transition:.2s;">
+                  <div style="font-size:11px;font-weight:700;color:#FF8A8A;font-family:'Space Mono',monospace;">OWNERSHIP TRANSFER</div>
+                  <div style="font-size:10px;color:#6b7280;margin-top:2px;">transferOwnership(newOwner)</div>
+                </button>
+              </div>
+            </div>
+            <!-- Right: result panel -->
+            <div style="padding:14px 16px;background:rgba(0,0,0,.3);">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;font-family:'Space Mono',monospace;margin-bottom:10px;">Evaluation Result</div>
+              <div id="pa-result-box" style="min-height:220px;display:flex;flex-direction:column;gap:8px;">
+                <div style="text-align:center;padding:40px 16px;color:#374151;font-size:12px;font-family:'Space Mono',monospace;">← Select a transaction to evaluate</div>
+              </div>
+            </div>
+          </div>
+          <!-- Live counter bar -->
+          <div style="padding:8px 16px;background:rgba(255,59,59,.03);border-top:1px solid rgba(255,59,59,.08);display:flex;gap:24px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:10px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.08em;">Blocked today</span>
+              <span id="pa-count-blocked" style="font-size:12px;font-weight:700;color:#FF3B3B;font-family:'Space Mono',monospace;">4,217</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:10px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.08em;">Approved</span>
+              <span id="pa-count-ok" style="font-size:12px;font-weight:700;color:#A3FF12;font-family:'Space Mono',monospace;">18,943</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:10px;color:#6b7280;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.08em;">Avg score</span>
+              <span id="pa-avg-score" style="font-size:12px;font-weight:700;color:#FF9F0A;font-family:'Space Mono',monospace;">38/100</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="premium-grid reveal">
+          <!-- Threat taxonomy -->
+          <div class="premium-card">
+            <div class="premium-card-label red">Threat Taxonomy — What Gets Blocked</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+              <div style="border:1px solid rgba(255,59,59,.15);border-radius:12px;padding:12px 14px;background:rgba(255,59,59,.025)">
+                <div style="font-size:13px;font-weight:700;color:#FF8A8A;margin-bottom:4px">Unlimited Approvals</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.4">Spend permissions with no scope boundary are blocked before signing. Contracts cannot acquire unbounded access to capital.</div>
+              </div>
+              <div style="border:1px solid rgba(255,59,59,.15);border-radius:12px;padding:12px 14px;background:rgba(255,59,59,.025)">
+                <div style="font-size:13px;font-weight:700;color:#FF8A8A;margin-bottom:4px">Route Deviation</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.4">Execution paths outside strategy parameters trigger automatic hold. Capital moves only through verified routes.</div>
+              </div>
+              <div style="border:1px solid rgba(255,59,59,.15);border-radius:12px;padding:12px 14px;background:rgba(255,59,59,.025)">
+                <div style="font-size:13px;font-weight:700;color:#FF8A8A;margin-bottom:4px">Permission Escalation</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.4">Contracts requesting access beyond declared intent are flagged and quarantined — before any approval is granted.</div>
+              </div>
+              <div style="border:1px solid rgba(255,59,59,.15);border-radius:12px;padding:12px 14px;background:rgba(255,59,59,.025)">
+                <div style="font-size:13px;font-weight:700;color:#FF8A8A;margin-bottom:4px">Oracle Sensitivity</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.4">Price feed anomalies mid-execution halt affected routes pending re-evaluation. Oracle manipulation is surface-scanned at every step.</div>
+              </div>
+              <div style="border:1px solid rgba(255,59,59,.15);border-radius:12px;padding:12px 14px;background:rgba(255,59,59,.025)">
+                <div style="font-size:13px;font-weight:700;color:#FF8A8A;margin-bottom:4px">Policy Breach</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.4">Any action outside the operator's configured policy envelope is blocked at the gate — not rolled back after. Execution is prevented, not undone.</div>
+              </div>
+              <div style="border:1px solid rgba(255,59,59,.15);border-radius:12px;padding:12px 14px;background:rgba(255,59,59,.025)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                  <div style="font-size:13px;font-weight:700;color:#FF8A8A">Dust &amp; Address Poisoning</div>
+                  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 7px;border-radius:999px;background:rgba(255,59,59,.1);border:1px solid rgba(255,59,59,.2);color:#FF8A8A">Guardian Agent</div>
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.4">Incoming dust tokens and address-poisoning attempts are flagged by Guardian Agent before they can be consolidated into outbound transactions. Marked addresses are quarantined from execution scope until manually reviewed — preventing identity-linkage attacks and misdirected capital flows.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Track record + closing -->
+          <div>
+            <div class="premium-card accent-red" style="margin-bottom:14px">
+              <div class="premium-card-label red">Track Record</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:10px">
+                  <span style="font-size:13px;color:var(--text-secondary)">Oracle attacks intercepted</span>
+                  <strong style="color:#FF8A8A;font-size:15px">$12M+ saved</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:10px">
+                  <span style="font-size:13px;color:var(--text-secondary)">Unsafe approvals blocked</span>
+                  <strong style="color:var(--neon-primary);font-size:15px">4,200+</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--text-secondary)">Policy violations flagged</span>
+                  <strong style="color:var(--warning-amber);font-size:15px">18,700+</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Closing statement -->
+            <div style="border:1px solid rgba(255,59,59,.2);border-radius:18px;padding:20px 22px;background:rgba(255,59,59,.03)">
+              <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;line-height:1.35;margin-bottom:10px">
+                "Protection Agent doesn't guarantee safety. Nothing can."
+              </div>
+              <div style="font-size:13px;color:var(--text-secondary);line-height:1.5">
+                It guarantees that every risk surface is scanned, scored, and decided by policy — not by chance. Prevention is an architecture decision, not a feature.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         RISK ENGINE AUTHORITY
+    ═══════════════════════════════════════════════════ -->
+    <section id="risk-engine">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Risk Engine</div>
+            <h2 class="section-title">The final authority in every execution path</h2>
+            <p class="section-sub">Agents propose. Strategies define. The Risk Engine decides. No capital moves without passing the policy stack — across every chain, every agent, every workflow.</p>
+          </div>
+        </div>
+
+        <div class="premium-grid reveal">
+          <div>
+            <div class="premium-card accent-red" style="margin-bottom:14px">
+              <div class="premium-card-label red">Core Principle</div>
+              <h3>Execution is permitted only when every constraint is satisfied</h3>
+              <ul class="feature-list red">
+                <li>Risk Engine authority cannot be delegated or bypassed by any agent</li>
+                <li>All execution modes — normal, restricted, crisis — are policy-defined</li>
+                <li>Governance and policy updates require explicit permissioned approval flows</li>
+                <li>Role-based controls segregate operator, agent, and admin authorities</li>
+                <li>Pause, reroute, or restrict actions can be triggered autonomously or manually</li>
+              </ul>
+            </div>
+            <div class="risk-authority-bar">
+              <div class="risk-authority-icon">🛡️</div>
+              <div class="risk-authority-text">
+                <strong>Risk Engine: ACTIVE — Final Authority Enforced</strong>
+                <span>Policy stack v2.0 · 12 chains · 0 overrides permitted</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="premium-card">
+            <div class="premium-card-label">Execution Modes</div>
+            <h3 style="font-size:20px;margin-bottom:10px">Adaptive risk posture across market conditions</h3>
+            <div class="risk-mode-grid">
+              <div class="risk-mode">
+                <div class="risk-mode-name green">● NORMAL</div>
+                <div class="risk-mode-desc">Full execution. All agents active. Standard policy thresholds apply.</div>
+              </div>
+              <div class="risk-mode">
+                <div class="risk-mode-name amber">● RESTRICTED</div>
+                <div class="risk-mode-desc">Reduced position limits. High-risk routes suspended. Manual review required for large actions.</div>
+              </div>
+              <div class="risk-mode">
+                <div class="risk-mode-name red">● CRISIS</div>
+                <div class="risk-mode-desc">Execution halted. Capital protection mode active. Only guardian operations permitted.</div>
+              </div>
+            </div>
+            <ul class="feature-list" style="margin-top:16px">
+              <li>Mode transitions triggered by on-chain signals or operator policy override</li>
+              <li>All mode changes are logged with timestamp, trigger, and approving role</li>
+              <li>No single agent or strategy can force a mode downgrade without governance approval</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALPHA SIGNALS -->
+    <section id="signals">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Alpha Signals</div>
+            <h2 class="section-title">Trending topics for operators</h2>
+            <p class="section-sub">
+              Signal streams surfaced by the ecosystem: on-chain activity, protection alerts, swarm templates, research routing and DePC milestones.
+            </p>
+          </div>
+        </div>
+
+        <div class="signal-grid">
+          <article class="card signal-card reveal" style="--bar:#A3FF12; --bg:
+            radial-gradient(circle at 20% 20%, rgba(163,255,18,.12), transparent 55%),
+            radial-gradient(circle at 90% 80%, rgba(0,200,83,.07), transparent 55%),
+            #0b1114;">
+            <div class="top-bar"></div>
+            <div class="signal-content">
+              <span class="badge" style="color:#A3FF12">DeFi</span>
+              <h3 class="signal-title">Yield Farming Renaissance</h3>
+              <p class="signal-desc">APY surging on L2s as automated routing and reward compounding flows return to the top of operator watchlists.</p>
+              <div class="signal-meta">
+                <span>3.2K operators · 148 posts</span>
+                <div class="avatars">
+                  <div class="av">Y</div><div class="av">D</div><div class="av">A</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card signal-card reveal" style="--bar:#FF3B3B; --bg:
+            radial-gradient(circle at 20% 15%, rgba(255,59,59,.14), transparent 55%),
+            radial-gradient(circle at 85% 85%, rgba(255,159,10,.06), transparent 55%),
+            #120b0b;">
+            <div class="top-bar"></div>
+            <div class="signal-content">
+              <span class="badge" style="color:#FF8A8A">Alert</span>
+              <h3 class="signal-title">Protection Agent Saved $12M</h3>
+              <p class="signal-desc">Oracle attack blocked by policy checks and execution guardrails before downstream liquidations propagated.</p>
+              <div class="signal-meta">
+                <span>8.9K operators · 412 posts</span>
+                <div class="avatars">
+                  <div class="av">P</div><div class="av">R</div><div class="av">G</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card signal-card reveal" style="--bar:#00C853; --bg:
+            radial-gradient(circle at 15% 20%, rgba(0,200,83,.13), transparent 58%),
+            radial-gradient(circle at 90% 80%, rgba(163,255,18,.05), transparent 58%),
+            #0a120d;">
+            <div class="top-bar"></div>
+            <div class="signal-content">
+              <span class="badge" style="color:#6AFF9B">GameFi</span>
+              <h3 class="signal-title">New Loot Farmer Templates</h3>
+              <p class="signal-desc">Fresh swarm templates are increasing run efficiency by 60% across repetitive in-game reward loops.</p>
+              <div class="signal-meta">
+                <span>2.1K operators · 96 posts</span>
+                <div class="avatars">
+                  <div class="av">L</div><div class="av">G</div><div class="av">F</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card signal-card reveal" style="--bar:#FF3388; --bg:
+            radial-gradient(circle at 20% 15%, rgba(255,51,136,.14), transparent 58%),
+            radial-gradient(circle at 90% 80%, rgba(255,255,255,.03), transparent 58%),
+            #140b11;">
+            <div class="top-bar"></div>
+            <div class="signal-content">
+              <span class="badge" style="color:#FF87B5">DePC</span>
+              <h3 class="signal-title">First On-Chain Label Deal</h3>
+              <p class="signal-desc">Arena winner signed a contract through DePC rails, proving a creator-to-launchpad talent monetization path.</p>
+              <div class="signal-meta">
+                <span>4.7K operators · 231 posts</span>
+                <div class="avatars">
+                  <div class="av">D</div><div class="av">A</div><div class="av">L</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card signal-card reveal" style="--bar:#00E5FF; --bg:
+            radial-gradient(circle at 18% 18%, rgba(0,229,255,.14), transparent 58%),
+            radial-gradient(circle at 90% 80%, rgba(163,255,18,.04), transparent 58%),
+            #081117;">
+            <div class="top-bar"></div>
+            <div class="signal-content">
+              <span class="badge" style="color:#79F3FF">Hive</span>
+              <h3 class="signal-title">Platinum Marketplace Launch</h3>
+              <p class="signal-desc">Operators can now sell custom Hive templates, creating a design-to-deploy template economy.</p>
+              <div class="signal-meta">
+                <span>1.6K operators · 74 posts</span>
+                <div class="avatars">
+                  <div class="av">H</div><div class="av">T</div><div class="av">M</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card signal-card reveal" style="--bar:#A3FF12; --bg:
+            radial-gradient(circle at 18% 18%, rgba(163,255,18,.10), transparent 58%),
+            radial-gradient(circle at 88% 85%, rgba(0,229,255,.06), transparent 58%),
+            #0b1013;">
+            <div class="top-bar"></div>
+            <div class="signal-content">
+              <span class="badge" style="color:#D8FF8A">Research</span>
+              <h3 class="signal-title">Multi-Chain Agent Routing</h3>
+              <p class="signal-desc">Execution experiments show gas savings up to 73% using route scoring and chain-aware task dispatch.</p>
+              <div class="signal-meta">
+                <span>5.3K operators · 289 posts</span>
+                <div class="avatars">
+                  <div class="av">R</div><div class="av">M</div><div class="av">Q</div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFIED STRATEGIES -->
+    <section id="strategies">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Verified Strategies</div>
+            <h2 class="section-title">Operator-published playbooks with live traction</h2>
+            <p class="section-sub">
+              Discover performance-oriented strategies, capital protection modules, and agent routines with community validation and tier-based publishing.
+            </p>
+          </div>
+        </div>
+
+        <div class="strategy-grid">
+          <!-- 1 -->
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$142K</div>
+              <div class="likes-badge">❤ 2.4K</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">C</div>
+                  <div class="author-name">CryptoVault</div>
+                </div>
+                <span class="tier platinum">plat</span>
+              </div>
+              <h3 class="strategy-title">Yield Scout Alpha</h3>
+              <p class="strategy-sub">847% APY</p>
+              <div class="strategy-stats">
+                <span>2.4K likes</span>
+                <span>31.8K views</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2 -->
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$67K</div>
+              <div class="likes-badge">❤ 1.2K</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">D</div>
+                  <div class="author-name">DeFi_Maxi</div>
+                </div>
+                <span class="tier gold">gold</span>
+              </div>
+              <h3 class="strategy-title">Arb Hunter v3</h3>
+              <p class="strategy-sub">Cross-DEX</p>
+              <div class="strategy-stats">
+                <span>1.2K likes</span>
+                <span>16.3K views</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3 -->
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$12M saved</div>
+              <div class="likes-badge">❤ 4.1K</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">S</div>
+                  <div class="author-name">SafeHands</div>
+                </div>
+                <span class="tier platinum">plat</span>
+              </div>
+              <h3 class="strategy-title">Protection Shield</h3>
+              <p class="strategy-sub">Oracle Guard</p>
+              <div class="strategy-stats">
+                <span>4.1K likes</span>
+                <span>52.7K views</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4 -->
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$28K</div>
+              <div class="likes-badge">❤ 980</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">G</div>
+                  <div class="author-name">GuildMaster</div>
+                </div>
+                <span class="tier gold">gold</span>
+              </div>
+              <h3 class="strategy-title">GameFi Loot Optimizer</h3>
+              <p class="strategy-sub">Automated rewards loop</p>
+              <div class="strategy-stats">
+                <span>980 likes</span>
+                <span>12.4K views</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOKEN + TIERS -->
+    <section id="docs">
+      <div class="container">
+        <div class="token-tier-grid">
+          <article class="card token-card reveal">
+            <div class="section-label">$GEBRID Token</div>
+            <h2 class="section-title">Fuel of the ecosystem</h2>
+            <p class="section-sub" style="margin-bottom:0;">
+              $GEBRID powers access, staking tiers, premium Hive templates, advanced execution routes, and institutional-grade modules across the ecosystem.
+            </p>
+            <div class="metrics-grid">
+              <div class="metric">
+                <span>Total Supply</span>
+                <strong>1B</strong>
+              </div>
+              <div class="metric">
+                <span>Staked</span>
+                <strong style="color:var(--neon-primary)">42.3%</strong>
+              </div>
+              <div class="metric">
+                <span>Circulating</span>
+                <strong>496M</strong>
+              </div>
+              <div class="metric">
+                <span>Burned</span>
+                <strong style="color:var(--warning-amber)">8.1%</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="card tiers-card reveal">
+            <div class="section-label">Access Tiers</div>
+            <h2 class="section-title">Staking tiers</h2>
+            <p class="section-sub" style="margin-bottom:0;">
+              Tiered access for operators and teams — from single-category exploration to unlimited multi-chain execution and white-label DAO deployment.
+            </p>
+
+            <div class="tiers-table" role="table" aria-label="Staking tiers">
+              <div class="tier-row head" role="row">
+                <div>Tier</div>
+                <div>Stake</div>
+                <div>Agents</div>
+                <div>Access</div>
+              </div>
+
+              <div class="tier-row" role="row">
+                <div class="tier-name"><span class="tier-chip free"></span>Free</div>
+                <div>0</div>
+                <div>3 agents</div>
+                <div>1 category</div>
+              </div>
+              <div class="tier-row" role="row">
+                <div class="tier-name"><span class="tier-chip bronze"></span>Bronze</div>
+                <div>1K $G</div>
+                <div>5 agents</div>
+                <div>auto-launch</div>
+              </div>
+              <div class="tier-row" role="row">
+                <div class="tier-name"><span class="tier-chip silver"></span>Silver</div>
+                <div>5K $G</div>
+                <div>7 agents</div>
+                <div>API</div>
+              </div>
+              <div class="tier-row" role="row">
+                <div class="tier-name"><span class="tier-chip gold"></span>Gold</div>
+                <div>25K $G</div>
+                <div>10 agents</div>
+                <div>multi-chain</div>
+              </div>
+              <div class="tier-row" role="row">
+                <div class="tier-name"><span class="tier-chip platinum"></span>Platinum</div>
+                <div>100K $G</div>
+                <div>unlimited</div>
+                <div>white-label / DAO</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MORE STRATEGIES -->
+    <section>
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">More Strategies</div>
+            <h2 class="section-title">Expanded catalog for specialized workflows</h2>
+          </div>
+        </div>
+
+        <div class="strategy-grid">
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$18K saved</div>
+              <div class="likes-badge">❤ 740</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">G</div>
+                  <div class="author-name">GasWizard</div>
+                </div>
+                <span class="tier platinum">plat</span>
+              </div>
+              <h3 class="strategy-title">Gas Optimizer Pro</h3>
+              <p class="strategy-sub">Route cost minimizer</p>
+              <div class="strategy-stats"><span>740 likes</span><span>11.2K views</span></div>
+            </div>
+          </article>
+
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$93K</div>
+              <div class="likes-badge">❤ 1.8K</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">B</div>
+                  <div class="author-name">BalanceBot</div>
+                </div>
+                <span class="tier gold">gold</span>
+              </div>
+              <h3 class="strategy-title">Rebalancer AI</h3>
+              <p class="strategy-sub">Portfolio rotation engine</p>
+              <div class="strategy-stats"><span>1.8K likes</span><span>24.7K views</span></div>
+            </div>
+          </article>
+
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$41K</div>
+              <div class="likes-badge">❤ 1.1K</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">N</div>
+                  <div class="author-name">NFT_Alpha</div>
+                </div>
+                <span class="tier platinum">plat</span>
+              </div>
+              <h3 class="strategy-title">Market Sniper — NFT Sweep</h3>
+              <p class="strategy-sub">Floor dislocation capture</p>
+              <div class="strategy-stats"><span>1.1K likes</span><span>18.5K views</span></div>
+            </div>
+          </article>
+
+          <article class="card strategy-card reveal">
+            <div class="strategy-hero">
+              <div class="pnl-badge">+$22K</div>
+              <div class="likes-badge">❤ 690</div>
+            </div>
+            <div class="strategy-body">
+              <div class="author-row">
+                <div class="author">
+                  <div class="author-av">M</div>
+                  <div class="author-name">MetaLand</div>
+                </div>
+                <span class="tier gold">gold</span>
+              </div>
+              <h3 class="strategy-title">Land Scout — Metaverse RE</h3>
+              <p class="strategy-sub">Parcel opportunity scanner</p>
+              <div class="strategy-stats"><span>690 likes</span><span>9.8K views</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         RWA AI VERTICAL
+    ═══════════════════════════════════════════════════ -->
+    <section id="rwa-ai">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">RWA AI</div>
+            <h2 class="section-title">Institutional-grade workflows for real-world assets</h2>
+            <p class="section-sub">AI agents handle deal sourcing, screening, scoring, and ongoing monitoring of tokenized real-world assets — under permissioned workflows and policy-based capital controls.</p>
+          </div>
+        </div>
+
+        <div class="premium-grid reveal">
+          <div class="premium-card accent-gold">
+            <div class="premium-card-label gold">RWA Execution</div>
+            <h3>From sourcing to settlement — agent-managed, audit-ready</h3>
+            <p>Permissioned workflows designed for institutional deployment. Every capital allocation is gated by policy, traced in full, and compatible with both DAO and LLC operational structures.</p>
+            <ul class="feature-list gold">
+              <li>Deal sourcing agents screen and score tokenized asset opportunities against configurable criteria</li>
+              <li>Policy-based capital controls enforce allocation limits, jurisdiction restrictions, and risk thresholds</li>
+              <li>Continuous monitoring agents surface covenant breaches, performance deviation, and liquidity signals</li>
+              <li>Audit-ready operations: every action carries timestamped execution trace and approver record</li>
+              <li>Compatible with DAO treasury structures and entity-wrapped LLC operational workflows</li>
+            </ul>
+            <div class="tags" style="margin-top:16px">
+              <span class="tag">Real Estate</span>
+              <span class="tag">Credit / Invoice Finance</span>
+              <span class="tag">Commodities</span>
+              <span class="tag">Revenue Streams</span>
+              <span class="tag">Structured Yield</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="premium-card" style="margin-bottom:14px">
+              <div class="premium-card-label gold">Agent Workflow</div>
+              <div class="flow-diagram" style="flex-direction:column;gap:8px;margin-top:8px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="flow-node hl" style="border-color:rgba(246,196,83,.35);color:var(--gold);background:rgba(246,196,83,.04)">Deal Sourcing</div>
+                  <div class="flow-arrow">→</div>
+                  <div class="flow-node">Screening Agent</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="flow-node">Risk Scoring</div>
+                  <div class="flow-arrow">→</div>
+                  <div class="flow-node risk">Capital Policy Gate</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="flow-node hl" style="border-color:rgba(246,196,83,.35);color:var(--gold);background:rgba(246,196,83,.04)">Settlement</div>
+                  <div class="flow-arrow">→</div>
+                  <div class="flow-node">Audit Log</div>
+                </div>
+              </div>
+            </div>
+            <div class="premium-card accent-gold">
+              <div class="premium-card-label gold">Institutional Controls</div>
+              <ul class="feature-list gold">
+                <li>Permissioned access: only credentialed roles can approve new asset classes</li>
+                <li>Multi-sig approval flows for allocations above configurable thresholds</li>
+                <li>Jurisdiction-aware execution — policy blocks non-permitted regions</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         AI DEBIT CARDS / TREASURY CARDS
+    ═══════════════════════════════════════════════════ -->
+    <section id="treasury-cards">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Treasury Cards</div>
+            <h2 class="section-title">Programmable card rails for on-chain capital</h2>
+            <p class="section-sub">Policy-based spending controls built directly into treasury operations. Team cards, department limits, and sub-account guardrails — with audit trails and approval flows on every transaction.</p>
+          </div>
+        </div>
+
+        <div class="premium-grid reverse reveal">
+          <div>
+            <div class="premium-card" style="margin-bottom:14px">
+              <div class="premium-card-label cyan">Spending Policy Engine</div>
+              <div class="mini-dashboard" style="grid-template-columns:repeat(2,1fr)">
+                <div class="mini-dash-cell">
+                  <div class="label">Department Limit</div>
+                  <div class="value neon">$50K / mo</div>
+                </div>
+                <div class="mini-dash-cell">
+                  <div class="label">Approvals Pending</div>
+                  <div class="value amber">2</div>
+                </div>
+                <div class="mini-dash-cell">
+                  <div class="label">Cards Active</div>
+                  <div class="value green">18</div>
+                </div>
+                <div class="mini-dash-cell">
+                  <div class="label">Policy Blocks</div>
+                  <div class="value red">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="premium-card accent-cyan">
+              <div class="premium-card-label cyan">Use Cases</div>
+              <ul class="feature-list cyan">
+                <li>DAO treasury ops — department-level sub-accounts with on-chain approval flows</li>
+                <li>Team card issuance — policy-bound limits per role, project, or timeframe</li>
+                <li>Automated treasury rebalancing — agents maintain target allocation rails</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="premium-card accent-cyan">
+            <div class="premium-card-label cyan">AI Treasury Cards — Product Roadmap</div>
+            <h3>Spend policy meets on-chain execution</h3>
+            <p>Programmable card rails with policy-based guardrails at the transaction level. Every spend is within a defined policy boundary — no overrides, no exceptions.</p>
+            <ul class="feature-list cyan">
+              <li>Transaction-level protection — every card spend passes through the Protection Agent pipeline</li>
+              <li>Treasury guardrails — policy enforces category limits, time windows, and chain restrictions</li>
+              <li>Audit trails — full transaction history, approval records, and policy match logs</li>
+              <li>Multi-sig approval paths for transactions exceeding operator-defined thresholds</li>
+              <li>Sub-account architecture — segregate treasury, operations, and investment allocations</li>
+            </ul>
+            <div class="tags" style="margin-top:16px">
+              <span class="tag">Policy-Gated Spend</span>
+              <span class="tag">Audit Trails</span>
+              <span class="tag">Team Cards</span>
+              <span class="tag">DAO Treasury</span>
+              <span class="tag">Sub-Accounts</span>
+            </div>
+            <p style="margin-top:14px;font-size:12px;color:var(--text-muted)">Treasury Cards are in product development. Access available through institutional onboarding.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         USE-CASE SEGMENTATION
+    ═══════════════════════════════════════════════════ -->
+    <section id="use-cases">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Who It's For</div>
+            <h2 class="section-title">Built for every operator profile</h2>
+            <p class="section-sub">From solo strategy builders to institutional capital managers — GEBRID OS adapts to your role, your capital scale, and your compliance requirements.</p>
+          </div>
+        </div>
+
+        <div class="segment-grid reveal">
+          <div class="segment-card">
+            <div class="segment-icon">⚡</div>
+            <div class="segment-name">Operator</div>
+            <div class="segment-role">Strategy executor · Agent deployer</div>
+            <div class="segment-prop">Launch verified agent swarms, access alpha signals, and deploy strategies across chains — no infrastructure overhead.</div>
+            <div class="segment-cta">Launch Swarm</div>
+          </div>
+          <div class="segment-card">
+            <div class="segment-icon">🔧</div>
+            <div class="segment-name">Creator</div>
+            <div class="segment-role">Template builder · Marketplace publisher</div>
+            <div class="segment-prop">Build, verify, and monetize agent workflows. Earn from template sales, usage licensing, and staking-boosted discovery.</div>
+            <div class="segment-cta">Build Template</div>
+          </div>
+          <div class="segment-card">
+            <div class="segment-icon">🏦</div>
+            <div class="segment-name">Fund</div>
+            <div class="segment-role">Institutional capital · Risk-managed execution</div>
+            <div class="segment-prop">Institutional-grade agent orchestration with Risk Engine authority, policy-based controls, audit logs, and white-label deployment.</div>
+            <div class="segment-cta">Request Demo</div>
+          </div>
+          <div class="segment-card">
+            <div class="segment-icon">🗳️</div>
+            <div class="segment-name">DAO</div>
+            <div class="segment-role">Treasury manager · Governance executor</div>
+            <div class="segment-prop">Programmable treasury with policy-gated spending, multi-sig approval flows, agent-managed rebalancing, and full audit trails.</div>
+            <div class="segment-cta">Configure Treasury</div>
+          </div>
+          <div class="segment-card">
+            <div class="segment-icon">🎮</div>
+            <div class="segment-name">Guild</div>
+            <div class="segment-role">GameFi coordinator · Yield optimizer</div>
+            <div class="segment-prop">Coordinate guild yield strategies, automate loot farming, manage shared treasury, and deploy swarms across GameFi ecosystems.</div>
+            <div class="segment-cta">Manage Guild</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         AGENT MARKETPLACE ECONOMICS
+    ═══════════════════════════════════════════════════ -->
+    <section id="marketplace-economics">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Marketplace Economics</div>
+            <h2 class="section-title">Build once. Earn from every deployment.</h2>
+            <p class="section-sub">Template creators earn from a layered economics model — sales, usage licensing, staking-boosted discovery, and institutional licensing tiers. Performance builds reputation, not promises.</p>
+          </div>
+        </div>
+
+        <div class="economics-grid reveal">
+          <div class="eco-earn-card">
+            <div class="eco-earn-icon">💰</div>
+            <div class="eco-earn-title">Template Sales</div>
+            <div class="eco-earn-desc">Publish verified agent templates to the marketplace. Operators purchase or license your workflow for one-time or recurring access. Creator receives primary sale proceeds minus platform fee.</div>
+          </div>
+          <div class="eco-earn-card">
+            <div class="eco-earn-icon">📊</div>
+            <div class="eco-earn-title">Usage-Based Revenue Share</div>
+            <div class="eco-earn-desc">Earn a share of platform fees generated when operators run your templates. High-utilization templates scale creator income proportionally to real usage volume.</div>
+          </div>
+          <div class="eco-earn-card">
+            <div class="eco-earn-icon">🔼</div>
+            <div class="eco-earn-title">Staking Visibility Boost</div>
+            <div class="eco-earn-desc">$GEBRID staking unlocks enhanced marketplace placement and discovery ranking. Higher stake tiers give templates algorithmic and UI-level priority in operator search results.</div>
+          </div>
+          <div class="eco-earn-card">
+            <div class="eco-earn-icon">⭐</div>
+            <div class="eco-earn-title">Premium Listings</div>
+            <div class="eco-earn-desc">Platinum-tier creators access featured marketplace sections with curated visibility. Premium placement is earned through staking threshold and verified track record — not purchased placement.</div>
+          </div>
+          <div class="eco-earn-card">
+            <div class="eco-earn-icon">🏢</div>
+            <div class="eco-earn-title">Institutional Licensing</div>
+            <div class="eco-earn-desc">Institutional operators may license templates under private or white-label terms. Creators negotiate bespoke licensing rates for enterprise deployments — escrow and verification handled by GEBRID.</div>
+          </div>
+          <div class="eco-earn-card">
+            <div class="eco-earn-icon">🏆</div>
+            <div class="eco-earn-title">Reputation Layer</div>
+            <div class="eco-earn-desc">On-chain reputation is built from verified deployments, operator ratings, and usage longevity. Reputation score influences discovery, tier access, and institutional licensing eligibility — without false performance guarantees.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         AUDIT / COMPLIANCE / PERMISSION MODEL
+    ═══════════════════════════════════════════════════ -->
+    <section id="compliance-audit">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Compliance &amp; Audit</div>
+            <h2 class="section-title">Permissioned by design. Auditable by default.</h2>
+            <p class="section-sub">Every execution, allocation, and agent action is traceable, permissioned, and policy-governed. Built for operators who require operational accountability — not just performance.</p>
+          </div>
+        </div>
+
+        <div class="audit-grid reveal">
+          <div class="audit-card">
+            <div class="audit-icon">🔐</div>
+            <div class="audit-title">Permissioned Roles</div>
+            <div class="audit-desc">Role-based access controls segregate operator, agent, admin, and guardian authorities. No single role holds unbounded system access.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">📋</div>
+            <div class="audit-title">Policy-Based Controls</div>
+            <div class="audit-desc">Configurable risk policies define allowed actions, capital limits, chain scope, and timing windows. Policy violations are blocked at the execution gate — not after.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">✅</div>
+            <div class="audit-title">Approval Flows</div>
+            <div class="audit-desc">Threshold-triggered multi-sig approval paths for high-value or out-of-policy actions. Approvals are timestamped, attributed, and logged immutably.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">📂</div>
+            <div class="audit-title">Audit Logs</div>
+            <div class="audit-desc">Every agent action, execution, block, and policy decision generates a structured log entry with full context — available for operator review and third-party audit.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">🔍</div>
+            <div class="audit-title">Execution Traces</div>
+            <div class="audit-desc">Transaction-level execution traces link on-chain outcomes to the originating strategy, agent, policy check, and approving role — end-to-end accountability.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">⚙️</div>
+            <div class="audit-title">Configurable Risk Policies</div>
+            <div class="audit-desc">Operators and institutions define their own policy parameters. Changes to risk policy require permissioned approval — preventing unilateral configuration drift.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">🧩</div>
+            <div class="audit-title">Role Segregation</div>
+            <div class="audit-desc">Execution, approval, monitoring, and governance functions operate under separate role scopes — preventing privilege escalation and single-point-of-failure scenarios.</div>
+          </div>
+          <div class="audit-card">
+            <div class="audit-icon">🌐</div>
+            <div class="audit-title">Operational Accountability</div>
+            <div class="audit-desc">All capital workflows are associated with identifiable roles. Every decision that affects capital has an attributable actor, policy match, and audit entry.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         ROADMAP
+    ═══════════════════════════════════════════════════ -->
+    <section id="roadmap">
+      <div class="container">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="section-label">Roadmap</div>
+            <h2 class="section-title">From infrastructure to ecosystem — phased and measurable</h2>
+            <p class="section-sub">Each phase unlocks the next. No vaporware timelines — deliverables are specific, KPIs are defined, and progression is gated by real product milestones.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-track reveal">
+          <div class="roadmap-card active">
+            <div class="roadmap-status live">LIVE</div>
+            <div class="roadmap-phase active">MVP</div>
+            <div class="roadmap-title">Core Infrastructure</div>
+            <div class="roadmap-goal">Establish agent orchestration, Protection Agent foundation, and verified strategy marketplace.</div>
+            <ul class="roadmap-deliverables">
+              <li>Agent lifecycle manager (create, deploy, monitor, retire)</li>
+              <li>Protection Agent: decode-simulate-score-decide pipeline</li>
+              <li>Risk Engine with policy-based execution authority</li>
+              <li>Wallet connect + SIWE authentication</li>
+              <li>Base marketplace with verified strategy listings</li>
+            </ul>
+            <div class="roadmap-kpi"><strong>KPI:</strong> 500 agents deployed · $10M capital under management · 0 critical exploits</div>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="roadmap-status building">BUILDING</div>
+            <div class="roadmap-phase">Phase 1</div>
+            <div class="roadmap-title">Capital Workflows</div>
+            <div class="roadmap-goal">Launch full capital management suite, operator marketplace, and staking tier economics.</div>
+            <ul class="roadmap-deliverables">
+              <li>Capital Engine: multi-chain portfolio management with oracle validation</li>
+              <li>Hive no-code builder: 50+ swarm templates</li>
+              <li>Marketplace economics: template sales + revenue share</li>
+              <li>$GEBRID staking tiers and access control system</li>
+              <li>Agent Orchestrator with Signal, Risk, and Guardian agents</li>
+            </ul>
+            <div class="roadmap-kpi"><strong>KPI:</strong> 5,000 operators · 200+ templates · $100M TVL reached</div>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="roadmap-status planned">PLANNED</div>
+            <div class="roadmap-phase">Phase 2</div>
+            <div class="roadmap-title">Institutional Expansion</div>
+            <div class="roadmap-goal">RWA vertical, institutional API, white-label infrastructure, and compliance-grade audit tooling.</div>
+            <ul class="roadmap-deliverables">
+              <li>RWA AI agents: deal sourcing, screening, monitoring</li>
+              <li>Institutional API with role-scoped access and rate controls</li>
+              <li>White-label deployment: branded operator environments</li>
+              <li>DAO-compatible treasury wrapper workflows</li>
+              <li>Compliance audit export: structured logs for institutional review</li>
+            </ul>
+            <div class="roadmap-kpi"><strong>KPI:</strong> 10 institutional clients · $1B assets in RWA workflows · 3 white-label deployments</div>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="roadmap-status planned">PLANNED</div>
+            <div class="roadmap-phase">Phase 3</div>
+            <div class="roadmap-title">Treasury OS + Global Scale</div>
+            <div class="roadmap-goal">AI Treasury Cards, global operator network, and full-stack institutional OS deployment.</div>
+            <ul class="roadmap-deliverables">
+              <li>Programmable treasury card rails with policy-based spend controls</li>
+              <li>Global operator network: 50,000+ active operators</li>
+              <li>DePC talent launchpad: Forge → Arena → Launchpad at scale</li>
+              <li>Cross-chain liquidity routing v3 with autonomous rebalancing</li>
+              <li>Institutional DAO OS: governance, treasury, and execution in one stack</li>
+            </ul>
+            <div class="roadmap-kpi"><strong>KPI:</strong> $10B cumulative capital routed · 50K operators · 100+ institutional partnerships</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAINS -->
+    <section>
+      <div class="container">
+        <div class="section-header-row reveal" style="margin-bottom:10px;">
+          <div>
+            <div class="section-label">Chains</div>
+            <h2 class="section-title" style="margin-bottom:0;">Execution layer coverage</h2>
+          </div>
+        </div>
+        <div class="chains-bar reveal" aria-label="Supported chains">
+          <span class="chain-pill">ETHEREUM</span>
+          <span class="chain-pill">ARBITRUM</span>
+          <span class="chain-pill">BASE</span>
+          <span class="chain-pill">SOLANA</span>
+          <span class="chain-pill">POLYGON</span>
+          <span class="chain-pill">BNB CHAIN</span>
+          <span class="chain-pill">OPTIMISM</span>
+          <span class="chain-pill">AVALANCHE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         INSTITUTIONAL CTA
+    ═══════════════════════════════════════════════════ -->
+    <section id="why-gebrid">
+      <div class="container">
+        <!-- Why GEBRID is different -->
+        <div class="section-header-row reveal" style="margin-bottom:14px">
+          <div>
+            <div class="section-label">Why GEBRID</div>
+            <h2 class="section-title">Infrastructure-grade. Not another agent marketplace.</h2>
+          </div>
+        </div>
+        <div class="diff-grid reveal" style="margin-bottom:28px">
+          <div class="diff-card">
+            <div class="diff-check">✓</div>
+            <div class="diff-title">Agent Orchestration OS</div>
+            <div class="diff-desc">Full lifecycle management — not just a catalog. Agents are deployed, monitored, and retired under a unified OS layer.</div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-check">✓</div>
+            <div class="diff-title">Policy-Based Protection</div>
+            <div class="diff-desc">Protection Agent enforces policy at the transaction level — decode, simulate, score, decide. Built in, not bolted on.</div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-check">✓</div>
+            <div class="diff-title">Risk Engine Final Authority</div>
+            <div class="diff-desc">No agent, strategy, or operator can override the Risk Engine. Execution is permitted only when every constraint is satisfied.</div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-check">✓</div>
+            <div class="diff-title">Institutional Controls</div>
+            <div class="diff-desc">Permissioned workflows, role-based access, audit logs, and configurable risk policies built for institutional capital managers.</div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-check">✓</div>
+            <div class="diff-title">Trading + RWA + Treasury</div>
+            <div class="diff-desc">One OS for every capital workflow — alpha execution, tokenized real-world assets, and programmable treasury card rails.</div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-check">✓</div>
+            <div class="diff-title">Creator Marketplace Economics</div>
+            <div class="diff-desc">Template creators earn from sales, usage revenue share, staking boosts, and institutional licensing — a flywheel economy, not a feature list.</div>
+          </div>
+        </div>
+
+        <!-- Institutional CTA -->
+        <div class="inst-cta-wrap reveal">
+          <div class="inst-cta-grid">
+            <div>
+              <div class="inst-cta-label">Institutional Access</div>
+              <h2 class="inst-cta-title">Ready to operate at <span class="neon-text">institutional scale</span>?</h2>
+              <p class="inst-cta-sub">GEBRID OS delivers API access, white-label infrastructure, DAO-compatible treasury workflows, and institutional onboarding for funds, teams, and protocol operators managing serious capital.</p>
+              <div class="inst-cta-tags">
+                <span class="inst-tag">Institutional Mode</span>
+                <span class="inst-tag">API Access</span>
+                <span class="inst-tag">White-Label</span>
+                <span class="inst-tag">DAO Wrapper</span>
+                <span class="inst-tag">Audit Export</span>
+                <span class="inst-tag">Custom Policy Stack</span>
+              </div>
+            </div>
+            <div class="inst-cta-actions">
+              <button id="launchAppCtaBtn" class="btn btn-neon btn-lg" type="button">Launch App</button>
+              <button class="btn btn-outline btn-lg" type="button">Request Institutional Demo</button>
+              <button class="btn btn-outline btn-lg" type="button">Join Community</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-brand-head">
+              <img src="gebrid-logo.jpg" alt="GEBRID logo small" onerror="this.outerHTML='<div style=\'width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#A3FF12,#00E5FF);display:grid;place-items:center;font-family:Syne,sans-serif;font-weight:800;font-size:15px;color:#0B0F14;flex:0 0 auto;\'>G</div>'" />
+              <div>
+                <div class="brand-name" style="font-size:17px;">GEBRID</div>
+                <span class="brand-sub">Agent OS for Capital</span>
+              </div>
+            </div>
+            <p>
+              AI-native ecosystem for agent orchestration, capital management, protection systems, creator launch infrastructure and multi-chain execution.
+            </p>
+            <div class="socials" aria-label="Social links">
+              <a class="soc" href="#" aria-label="X">X</a>
+              <a class="soc" href="#" aria-label="TG">TG</a>
+              <a class="soc" href="#" aria-label="DC">DC</a>
+              <a class="soc" href="#" aria-label="GH">GH</a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>For Operators</h4>
+            <div class="footer-links">
+              <a href="#strategies">Browse Agents</a>
+              <a href="#ecosystem">Build Hive</a>
+              <a href="#strategies">My Strategies</a>
+              <a href="#docs">Staking Tiers</a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>For Institutions</h4>
+            <div class="footer-links">
+              <a href="#ecosystem">GEBRID OS</a>
+              <a href="#top">Capital Engine</a>
+              <a href="#signals">Protection Agent</a>
+              <a href="#docs">API Access</a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Ecosystem</h4>
+            <div class="footer-links">
+              <a href="#ecosystem">GEBRID Core</a>
+              <a href="#ecosystem">GEBRID Hive</a>
+              <a href="#depc">GEBRID DePC</a>
+              <a href="#docs">Whitepaper</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© <span id="year"></span> GEBRID. All rights reserved.</div>
+          <div class="mono">Protocol UI • v2.0 • Multi-Chain / Agent-First</div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- CONNECT WALLET MODAL -->
+  <div id="walletModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="walletModalTitle">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 id="walletModalTitle" class="modal-title">Connect Wallet</h3>
+        <button id="closeWalletBtn" class="icon-btn" type="button" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="walletStatus" class="status-box info" role="status" aria-live="polite"></div>
+        <div id="walletError" class="status-box error" role="alert"></div>
+
+        <button class="wallet-option" type="button" data-wallet="metamask">
+          <span class="wallet-option-left">
+            <span class="wallet-icon">MM</span>
+            <span>
+              <h5>MetaMask</h5>
+              <p>Connect via <span class="mono">eth_requestAccounts</span></p>
+            </span>
+          </span>
+          <span style="display:flex;align-items:center;gap:8px;">
+            <span id="spin-metamask" class="spinner"></span>
+            <span class="wallet-chevron">→</span>
+          </span>
+        </button>
+
+        <button class="wallet-option" type="button" data-wallet="browser">
+          <span class="wallet-option-left">
+            <span class="wallet-icon">INJ</span>
+            <span>
+              <h5>Browser Wallet</h5>
+              <p>Injected provider (Rabby / Trust / Coinbase / etc.)</p>
+            </span>
+          </span>
+          <span style="display:flex;align-items:center;gap:8px;">
+            <span id="spin-browser" class="spinner"></span>
+            <span class="wallet-chevron">→</span>
+          </span>
+        </button>
+
+        <button class="wallet-option" type="button" data-wallet="phantom">
+          <span class="wallet-option-left">
+            <span class="wallet-icon">PH</span>
+            <span>
+              <h5>Phantom</h5>
+              <p>Solana wallet via <span class="mono">window.solana.connect()</span></p>
+            </span>
+          </span>
+          <span style="display:flex;align-items:center;gap:8px;">
+            <span id="spin-phantom" class="spinner"></span>
+            <span class="wallet-chevron">→</span>
+          </span>
+        </button>
+
+        <div id="walletConnectedState" class="wallet-state" aria-live="polite">
+          <div class="state-row">
+            <div class="state-k">Wallet Type</div>
+            <div id="stateWalletType" class="state-v">—</div>
+          </div>
+          <div class="state-row">
+            <div class="state-k">Address</div>
+            <div id="stateAddress" class="state-v mono">—</div>
+          </div>
+          <div class="state-row">
+            <div class="state-k">Balance</div>
+            <div id="stateBalance" class="state-v">—</div>
+          </div>
+          <div class="state-row">
+            <div class="state-k">Network</div>
+            <div id="stateNetwork" class="state-v">—</div>
+          </div>
+          <button id="disconnectWalletBtn" class="btn btn-outline" type="button">Disconnect</button>
+        </div>
+
+        <div class="tiny-note">
+          GEBRID uses direct wallet requests only. No fake addresses, no local storage, no session storage.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const state = {
+        walletType: null, // metamask | browser | phantom
+        providerType: null, // evm | solana
+        address: null,
+        chainId: null,
+        chainName: null,
+        ethBalance: null,
+        solBalance: null,
+        ethereumListenersAttached: false,
+        solanaListenersAttached: false
+      };
+
+      const CHAIN_MAP = {
+        "0x1": "Ethereum",
+        "0x89": "Polygon",
+        "0xa": "Optimism",
+        "0xa4b1": "Arbitrum",
+        "0x2105": "Base",
+        "0x38": "BNB Chain",
+        "0xa86a": "Avalanche",
+        "0xaa36a7": "Sepolia",
+        "0x5": "Goerli"
+      };
+
+      const els = {
+        year: document.getElementById("year"),
+        openWalletBtn: document.getElementById("openWalletBtn"),
+        heroConnectBtn: document.getElementById("heroConnectBtn"),
+        walletModal: document.getElementById("walletModal"),
+        closeWalletBtn: document.getElementById("closeWalletBtn"),
+        walletStatus: document.getElementById("walletStatus"),
+        walletError: document.getElementById("walletError"),
+        walletConnectedState: document.getElementById("walletConnectedState"),
+        disconnectWalletBtn: document.getElementById("disconnectWalletBtn"),
+
+        stateWalletType: document.getElementById("stateWalletType"),
+        stateAddress: document.getElementById("stateAddress"),
+        stateBalance: document.getElementById("stateBalance"),
+        stateNetwork: document.getElementById("stateNetwork"),
+
+        walletPill: document.getElementById("walletPill"),
+        walletPillAddress: document.getElementById("walletPillAddress"),
+        walletPillChain: document.getElementById("walletPillChain"),
+
+        spinMetaMask: document.getElementById("spin-metamask"),
+        spinBrowser: document.getElementById("spin-browser"),
+        spinPhantom: document.getElementById("spin-phantom")
+      };
+
+      function qsAll(sel, root=document){ return Array.from(root.querySelectorAll(sel)); }
+
+      // Utils
+      function truncateAddress(addr){
+        if(!addr || typeof addr !== "string") return "—";
+        if(addr.length <= 12) return addr;
+        return addr.slice(0,6) + "..." + addr.slice(-4);
+      }
+
+      function formatWeiToEth(weiHex){
+        try{
+          const wei = BigInt(weiHex);
+          const ether = Number(wei) / 1e18;
+          return ether;
+        }catch{
+          return null;
+        }
+      }
+
+      function formatNumber(value, maxFraction = 4){
+        if(value === null || value === undefined || Number.isNaN(value)) return "—";
+        return new Intl.NumberFormat("en-US", {
+          maximumFractionDigits: maxFraction
+        }).format(value);
+      }
+
+      function setStatus(message, type = "info"){
+        clearMessages();
+        if(!message) return;
+        els.walletStatus.textContent = message;
+        els.walletStatus.className = "status-box show " + type;
+      }
+
+      function setError(message){
+        if(!message) return;
+        els.walletError.textContent = message;
+        els.walletError.className = "status-box show error";
+      }
+
+      function clearMessages(){
+        els.walletStatus.className = "status-box info";
+        els.walletStatus.textContent = "";
+        els.walletError.className = "status-box error";
+        els.walletError.textContent = "";
+      }
+
+      function showSpinner(kind, show){
+        const map = {
+          metamask: els.spinMetaMask,
+          browser: els.spinBrowser,
+          phantom: els.spinPhantom
+        };
+        const el = map[kind];
+        if(!el) return;
+        el.classList.toggle("show", !!show);
+      }
+
+      function openModal(){
+        els.walletModal.classList.add("open");
+        els.walletModal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal(){
+        els.walletModal.classList.remove("open");
+        els.walletModal.setAttribute("aria-hidden", "true");
+      }
+
+      function resetWalletState(){
+        state.walletType = null;
+        state.providerType = null;
+        state.address = null;
+        state.chainId = null;
+        state.chainName = null;
+        state.ethBalance = null;
+        state.solBalance = null;
+      }
+
+      function updateConnectedUI(){
+        const isConnected = !!state.address;
+
+        // Navbar
+        if(isConnected){
+          els.walletPill.classList.add("active");
+          els.walletPillAddress.textContent = truncateAddress(state.address);
+          const chainLabel = state.providerType === "solana"
+            ? (state.chainName || "Solana")
+            : (state.chainName || "Unknown Network");
+          els.walletPillChain.textContent = chainLabel;
+          els.openWalletBtn.style.display = "none";
+        } else {
+          els.walletPill.classList.remove("active");
+          els.walletPillAddress.textContent = "0x0000...0000";
+          els.walletPillChain.textContent = "Not connected";
+          els.openWalletBtn.style.display = "";
+        }
+
+        // Modal connected state
+        if(isConnected){
+          els.walletConnectedState.classList.add("active");
+          els.stateWalletType.textContent = (
+            state.walletType === "metamask" ? "MetaMask" :
+            state.walletType === "browser" ? "Browser Wallet (Injected)" :
+            state.walletType === "phantom" ? "Phantom" :
+            "Wallet"
+          );
+
+          els.stateAddress.textContent = state.address || "—";
+
+          if(state.providerType === "evm"){
+            const balanceText = state.ethBalance === null ? "—" : `${formatNumber(state.ethBalance, 6)} ETH`;
+            els.stateBalance.textContent = balanceText;
+            els.stateNetwork.textContent = state.chainName || "Unknown";
+          } else if(state.providerType === "solana"){
+            const balanceText = state.solBalance === null ? "Unavailable in browser-only mode" : `${formatNumber(state.solBalance, 6)} SOL`;
+            els.stateBalance.textContent = balanceText;
+            els.stateNetwork.textContent = state.chainName || "Solana";
+          } else {
+            els.stateBalance.textContent = "—";
+            els.stateNetwork.textContent = "—";
+          }
+        } else {
+          els.walletConnectedState.classList.remove("active");
+          els.stateWalletType.textContent = "—";
+          els.stateAddress.textContent = "—";
+          els.stateBalance.textContent = "—";
+          els.stateNetwork.textContent = "—";
+        }
+      }
+
+      async function refreshEvmAccountData(provider){
+        const eth = provider || window.ethereum;
+        if(!eth) throw new Error("No injected EVM provider");
+
+        const accounts = await eth.request({ method: "eth_accounts" });
+        if(!accounts || !accounts.length){
+          throw new Error("No EVM account found");
+        }
+        const address = accounts[0];
+
+        const chainId = await eth.request({ method: "eth_chainId" });
+        const balanceHex = await eth.request({
+          method: "eth_getBalance",
+          params: [address, "latest"]
+        });
+
+        state.address = address;
+        state.chainId = chainId;
+        state.chainName = CHAIN_MAP[chainId] || `Unknown (${chainId})`;
+        state.ethBalance = formatWeiToEth(balanceHex);
+      }
+
+      function attachEthereumListenersOnce(){
+        if(state.ethereumListenersAttached) return;
+        if(!window.ethereum || typeof window.ethereum.on !== "function") return;
+
+        window.ethereum.on("accountsChanged", async (accounts) => {
+          try{
+            if(!accounts || !accounts.length){
+              disconnectWallet(false);
+              return;
+            }
+            if(state.providerType !== "evm") return;
+            state.address = accounts[0];
+            await refreshEvmAccountData(window.ethereum);
+            updateConnectedUI();
+            if(els.walletModal.classList.contains("open")){
+              setStatus("Wallet account updated.");
+            }
+          }catch(err){
+            setError(parseWalletError(err));
+          }
+        });
+
+        window.ethereum.on("chainChanged", () => {
+          // Requirement: reload page
+          window.location.reload();
+        });
+
+        state.ethereumListenersAttached = true;
+      }
+
+      function attachSolanaListenersOnce(){
+        if(state.solanaListenersAttached) return;
+        const sol = window.solana;
+        if(!sol || typeof sol.on !== "function") return;
+
+        // Phantom event support varies, but we handle what exists safely.
+        try{
+          sol.on("accountChanged", (publicKey) => {
+            if(state.providerType !== "solana") return;
+            if(!publicKey){
+              disconnectWallet(false);
+              return;
+            }
+            state.address = publicKey.toString();
+            updateConnectedUI();
+            if(els.walletModal.classList.contains("open")){
+              setStatus("Phantom account updated.");
+            }
+          });
+        }catch(_e){ /* ignore unsupported */ }
+
+        try{
+          sol.on("disconnect", () => {
+            if(state.providerType === "solana"){
+              disconnectWallet(false);
+            }
+          });
+        }catch(_e){ /* ignore unsupported */ }
+
+        state.solanaListenersAttached = true;
+      }
+
+      function parseWalletError(err){
+        if(!err) return "Unknown wallet error";
+        if(typeof err === "string") return err;
+
+        // EIP-1193 user rejected
+        if(err.code === 4001) return "Connection rejected";
+        if(err.message && /User rejected/i.test(err.message)) return "Connection rejected";
+        if(err.message) return err.message;
+        return "Wallet connection failed";
+      }
+
+      function detectInjectedProvider(){
+        const eth = window.ethereum;
+        if(!eth) return null;
+
+        // If providers array exists, try to prefer MetaMask for metamask option
+        if(Array.isArray(eth.providers) && eth.providers.length){
+          return eth.providers;
+        }
+        return [eth];
+      }
+
+      function getMetaMaskProvider(){
+        const providers = detectInjectedProvider();
+        if(!providers) return null;
+        const mm = providers.find(p => p && p.isMetaMask);
+        return mm || null;
+      }
+
+      function getAnyInjectedProvider(){
+        const providers = detectInjectedProvider();
+        if(!providers || !providers.length) return null;
+        return providers[0];
+      }
+
+      async function connectMetaMask(){
+        clearMessages();
+        showSpinner("metamask", true);
+        try{
+          const mm = getMetaMaskProvider();
+          if(!mm){
+            throw new Error("No wallet detected. Install MetaMask");
+          }
+
+          setStatus("Connecting to MetaMask...");
+          await mm.request({ method: "eth_requestAccounts" });
+
+          state.walletType = "metamask";
+          state.providerType = "evm";
+          await refreshEvmAccountData(mm);
+          attachEthereumListenersOnce();
+          updateConnectedUI();
+
+          setStatus("MetaMask connected.");
+        }catch(err){
+          setError(parseWalletError(err));
+        }finally{
+          showSpinner("metamask", false);
+        }
+      }
+
+      async function connectBrowserWallet(){
+        clearMessages();
+        showSpinner("browser", true);
+        try{
+          const injected = getAnyInjectedProvider();
+          if(!injected){
+            throw new Error("No wallet detected. Install a Web3 wallet (MetaMask, Rabby, Trust, Coinbase, etc.)");
+          }
+
+          setStatus("Connecting to injected wallet...");
+          await injected.request({ method: "eth_requestAccounts" });
+
+          state.walletType = "browser";
+          state.providerType = "evm";
+          await refreshEvmAccountData(injected);
+          attachEthereumListenersOnce();
+          updateConnectedUI();
+
+          setStatus("Browser wallet connected.");
+        }catch(err){
+          setError(parseWalletError(err));
+        }finally{
+          showSpinner("browser", false);
+        }
+      }
+
+      async function connectPhantom(){
+        clearMessages();
+        showSpinner("phantom", true);
+        try{
+          if(!window.solana || typeof window.solana.connect !== "function"){
+            throw new Error("No wallet detected. Install Phantom");
+          }
+
+          setStatus("Connecting to Phantom...");
+          const resp = await window.solana.connect();
+
+          let address = null;
+          if(resp && resp.publicKey){
+            address = resp.publicKey.toString();
+          } else if(window.solana.publicKey){
+            address = window.solana.publicKey.toString();
+          }
+
+          if(!address){
+            throw new Error("Phantom connected but address not available");
+          }
+
+          state.walletType = "phantom";
+          state.providerType = "solana";
+          state.address = address;
+          state.chainName = "Solana";
+          state.solBalance = null; // not requested by spec for Phantom RPC; no external libs/endpoints used
+
+          attachSolanaListenersOnce();
+          updateConnectedUI();
+          setStatus("Phantom connected.");
+        }catch(err){
+          setError(parseWalletError(err));
+        }finally{
+          showSpinner("phantom", false);
+        }
+      }
+
+      async function disconnectWallet(showMessage = true){
+        clearMessages();
+
+        // Try Phantom disconnect if currently phantom
+        if(state.providerType === "solana" && window.solana && typeof window.solana.disconnect === "function"){
+          try{ await window.solana.disconnect(); } catch(_e){ /* ignore */ }
+        }
+
+        resetWalletState();
+        updateConnectedUI();
+        if(showMessage){
+          setStatus("Disconnected.");
+        }
+      }
+
+      // Modal events
+      function setupWalletModalEvents(){
+        const openers = [els.openWalletBtn, els.heroConnectBtn, document.getElementById("launchAppNavBtn"), document.getElementById("launchAppCtaBtn")].filter(Boolean);
+        openers.forEach(btn => btn.addEventListener("click", openModal));
+
+        els.closeWalletBtn.addEventListener("click", closeModal);
+
+        els.walletModal.addEventListener("click", (e) => {
+          if(e.target === els.walletModal) closeModal();
+        });
+
+        window.addEventListener("keydown", (e) => {
+          if(e.key === "Escape" && els.walletModal.classList.contains("open")){
+            closeModal();
+          }
+        });
+
+        qsAll(".wallet-option").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const kind = btn.getAttribute("data-wallet");
+            if(kind === "metamask") await connectMetaMask();
+            if(kind === "browser") await connectBrowserWallet();
+            if(kind === "phantom") await connectPhantom();
+          });
+        });
+
+        els.disconnectWalletBtn.addEventListener("click", async () => {
+          await disconnectWallet(true);
+        });
+      }
+
+      // Audience toggle (UI only)
+      function setupModeToggle(){
+        qsAll(".mode-toggle").forEach(toggle => {
+          const buttons = qsAll("button", toggle);
+          buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+              buttons.forEach(b => {
+                b.classList.remove("active");
+                b.setAttribute("aria-selected", "false");
+              });
+              btn.classList.add("active");
+              btn.setAttribute("aria-selected", "true");
+
+              const mode = btn.dataset.mode;
+              const heroText = document.querySelector(".hero p");
+              if(!heroText) return;
+
+              if(mode === "institutions"){
+                heroText.textContent =
+                  "GEBRID OS delivers institutional-grade agent orchestration, policy-based capital controls, audit-first execution flows, and Protection Agent guardrails — purpose-built for multi-chain deployment at scale.";
+              } else {
+                heroText.textContent =
+                  "GEBRID OS is the AI-native operating system for on-chain capital — where agent swarms execute trading, RWA, and treasury workflows under institutional-grade controls, with policy-based protection built into every transaction.";
+              }
+            });
+          });
+        });
+      }
+
+      // Scroll reveal
+      function setupReveal(){
+        const nodes = qsAll(".reveal");
+        if(!("IntersectionObserver" in window)){
+          nodes.forEach(n => n.classList.add("visible"));
+          return;
+        }
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if(entry.isIntersecting){
+              entry.target.classList.add("visible");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -20px 0px" });
+
+        nodes.forEach(n => io.observe(n));
+      }
+
+      // Hamburger mobile menu
+      function setupHamburger(){
+        const burger = document.getElementById("burgerBtn");
+        const menu = document.getElementById("mobileMenu");
+        if(!burger || !menu) return;
+        burger.addEventListener("click", () => {
+          const open = menu.classList.toggle("open");
+          burger.classList.toggle("open", open);
+          burger.setAttribute("aria-expanded", String(open));
+        });
+        menu.querySelectorAll("a").forEach(a => {
+          a.addEventListener("click", () => {
+            menu.classList.remove("open");
+            burger.classList.remove("open");
+            burger.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      // Count-up animation for stats
+      function setupCountUp(){
+        const nodes = document.querySelectorAll(".stat-value[data-target]");
+        if(!("IntersectionObserver" in window)){
+          return;
+        }
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if(!entry.isIntersecting) return;
+            const el = entry.target;
+            if(el.dataset.animated) return;
+            el.dataset.animated = "1";
+            io.unobserve(el);
+            if(el.dataset.noup) return; // skip 0%
+            const target = parseFloat(el.dataset.target);
+            const prefix = el.dataset.prefix || "";
+            const suffix = el.dataset.suffix || "";
+            const duration = 1400;
+            const steps = 40;
+            const interval = duration / steps;
+            let step = 0;
+            const timer = setInterval(() => {
+              step++;
+              const progress = step / steps;
+              const eased = 1 - Math.pow(1 - progress, 3);
+              const val = target * eased;
+              const display = Number.isInteger(target) ? Math.round(val) : val.toFixed(1);
+              el.textContent = prefix + display + suffix;
+              if(step >= steps){
+                clearInterval(timer);
+                el.textContent = prefix + (Number.isInteger(target) ? target : target.toFixed(1)) + suffix;
+              }
+            }, interval);
+          });
+        }, { threshold: 0.5 });
+        nodes.forEach(n => io.observe(n));
+      }
+
+      // Active nav link on scroll
+      function setupActiveNav(){
+        const sections = ["ecosystem","trading-ai","risk-engine","rwa-ai","treasury-cards","protection","signals","strategies","use-cases","marketplace-economics","compliance-audit","roadmap","why-gebrid","docs"].map(id => document.getElementById(id)).filter(Boolean);
+        const navLinks = Array.from(document.querySelectorAll(".nav-links a, .mobile-menu a"));
+        if(!sections.length || !navLinks.length) return;
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if(!entry.isIntersecting) return;
+            const id = entry.target.id;
+            navLinks.forEach(a => {
+              a.classList.toggle("active", a.getAttribute("href") === "#" + id);
+            });
+          });
+        }, { threshold: 0.35, rootMargin: "-10% 0px -55% 0px" });
+        sections.forEach(s => io.observe(s));
+      }
+
+      function init(){
+        els.year.textContent = new Date().getFullYear();
+        setupReveal();
+        setupModeToggle();
+        setupWalletModalEvents();
+        setupHamburger();
+        setupCountUp();
+        setupActiveNav();
+        updateConnectedUI();
+
+        // If already connected in injected wallet from existing session (provider-side),
+        // read it without storing locally.
+        if(window.ethereum){
+          attachEthereumListenersOnce();
+          window.ethereum.request({ method: "eth_accounts" })
+            .then(async (accounts) => {
+              if(accounts && accounts.length){
+                state.walletType = (window.ethereum.isMetaMask ? "metamask" : "browser");
+                state.providerType = "evm";
+                await refreshEvmAccountData(window.ethereum);
+                updateConnectedUI();
+              }
+            })
+            .catch(() => {/* silent */});
+        }
+
+        if(window.solana){
+          attachSolanaListenersOnce();
+          try{
+            if(window.solana.isPhantom && window.solana.isConnected && window.solana.publicKey){
+              state.walletType = "phantom";
+              state.providerType = "solana";
+              state.address = window.solana.publicKey.toString();
+              state.chainName = "Solana";
+              updateConnectedUI();
+            }
+          }catch(_e){/* silent */}
+        }
+      }
+
+      init();
+    })();
+  </script>
+<!-- ═══ GEBRID LIVE WIDGETS JS ═══════════════════════════════ -->
+<style>
+  @keyframes pa-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes ce-flash{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
+  .pa-preset-btn:hover{filter:brightness(1.15);transform:translateX(2px);}
+  .pa-score-ring{transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1);}
+</style>
+<script>
+(function(){
+  /* ─── CAPITAL ENGINE LIVE WIDGET ─────────────────────── */
+  const REGIMES = ["RISK_ON","RISK_ON","NEUTRAL","RISK_OFF","FRAGILE"];
+  const REGIME_C = {RISK_ON:"#A3FF12",NEUTRAL:"#94a3b8",RISK_OFF:"#FF9F0A",FRAGILE:"#FF3B3B"};
+  const SIGNALS_POOL = [
+    {dir:"LONG", sym:"ETH/USDC",   score:82, tag:"BOS+SWEEP",  verdict:"APPROVED", vc:"#A3FF12"},
+    {dir:"LONG", sym:"cbETH/ETH",  score:67, tag:"FIB+VOL",    verdict:"APPROVED", vc:"#A3FF12"},
+    {dir:"SHORT",sym:"WBTC/USDC",  score:74, tag:"BOS+MACD",   verdict:"APPROVED", vc:"#A3FF12"},
+    {dir:"LONG", sym:"ETH/USDC",   score:41, tag:"MACD only",  verdict:"CAUTION",  vc:"#FF9F0A"},
+    {dir:"SHORT",sym:"ARB/USDC",   score:88, tag:"ELITE",      verdict:"APPROVED", vc:"#A3FF12"},
+    {dir:"LONG", sym:"OP/USDC",    score:28, tag:"weak setup", verdict:"REJECTED", vc:"#FF3B3B"},
+  ];
+
+  let ceNav = 1284320, ceDd = 3.2, ceScore = 87, ceBlocked = 3, ceRegime = "RISK_ON";
+  let feedItems = [];
+
+  function fmtUsd(v){return "$" + (v>=1e6?(v/1e6).toFixed(3)+"M":v.toLocaleString());}
+
+  function ceTick(){
+    // Drift NAV
+    ceNav += (Math.random()-0.48)*1200;
+    ceDd = Math.max(0.5, Math.min(9.8, ceDd + (Math.random()-0.51)*0.3));
+    ceScore = Math.max(30, Math.min(98, ceScore + Math.floor((Math.random()-0.5)*8)));
+    ceBlocked = Math.max(0, ceBlocked + (Math.random()>.7?1:Math.random()>.8?-1:0));
+    ceRegime = Math.random()>.9 ? REGIMES[Math.floor(Math.random()*REGIMES.length)] : ceRegime;
+
+    const navEl = document.getElementById("ce-nav");
+    const navChgEl = document.getElementById("ce-nav-chg");
+    const ddEl = document.getElementById("ce-dd");
+    const ddBarEl = document.getElementById("ce-dd-bar");
+    const ddPctEl = document.getElementById("ce-dd-pct");
+    const regimeEl = document.getElementById("ce-regime");
+    const scoreEl = document.getElementById("ce-score");
+    const blockedEl = document.getElementById("ce-blocked");
+
+    if(navEl) navEl.textContent = fmtUsd(Math.round(ceNav));
+    const navChg = ((ceNav-1284320)/1284320*100).toFixed(2);
+    if(navChgEl){ navChgEl.textContent = (navChg>=0?"+":"")+navChg+"% today"; navChgEl.style.color = navChg>=0?"#00C853":"#FF3B3B"; }
+    if(ddEl){ ddEl.textContent = "-"+ceDd.toFixed(1)+"%"; ddEl.style.color = ceDd>7?"#FF3B3B":ceDd>4?"#FF9F0A":"#e2e8f0"; }
+    if(ddBarEl){ ddBarEl.style.width=(ceDd/10*100)+"%"; ddBarEl.style.background=ceDd>7?"linear-gradient(90deg,#FF3B3B,#ff6b6b)":ceDd>4?"linear-gradient(90deg,#FF9F0A,#fbbf24)":"linear-gradient(90deg,#A3FF12,#00C853)"; }
+    if(ddPctEl) ddPctEl.textContent = ceDd.toFixed(1)+"% / 10%";
+    if(regimeEl){ regimeEl.textContent = ceRegime; regimeEl.style.color = REGIME_C[ceRegime]||"#94a3b8"; }
+    if(scoreEl){ scoreEl.textContent = ceScore+"/100"; scoreEl.style.color = ceScore>=70?"#A3FF12":ceScore>=40?"#FF9F0A":"#FF3B3B"; }
+    if(blockedEl) blockedEl.textContent = ceBlocked+" txs";
+
+    // Feed
+    if(Math.random()>.55){
+      const sig = SIGNALS_POOL[Math.floor(Math.random()*SIGNALS_POOL.length)];
+      feedItems.unshift(sig);
+      if(feedItems.length>3) feedItems = feedItems.slice(0,3);
+      renderFeed();
+    }
+  }
+
+  function renderFeed(){
+    const el = document.getElementById("ce-feed-items");
+    if(!el) return;
+    el.innerHTML = feedItems.map(s=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:${s.dir==="LONG"?"#4ade80":"#f87171"};">${s.dir}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;">${s.sym}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:#6b7280;">${s.tag}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:${s.vc};">${s.verdict}</span>
+      </div>`).join("");
+  }
+
+  /* ─── PROTECTION AGENT SIMULATOR ─────────────────────── */
+  const PA_TESTS = {
+    approve:{
+      title:"UNLIMITED APPROVE", score:92, verdict:"BLOCK",
+      flags:["UNLIMITED_APPROVAL: MaxUint256 detected","AUTO-BLOCK: rule-001 triggered","DRAIN_RISK: spender unverified"],
+      reasoning:"🔴 Unlimited ERC-20 approval (MaxUint256) — AUTO-BLOCK. Spender has no verified contract. This approval pattern is used in 94% of approval phishing attacks.",
+      color:"#FF3B3B"
+    },
+    nft:{
+      title:"SET APPROVAL FOR ALL", score:90, verdict:"BLOCK",
+      flags:["SET_APPROVAL_FOR_ALL: NFT collection","AUTO-BLOCK: rule-002 triggered","OPERATOR: unverified address"],
+      reasoning:"🔴 setApprovalForAll grants operator unlimited NFT transfer rights. HIGH severity. Cannot be overridden.",
+      color:"#FF3B3B"
+    },
+    swap:{
+      title:"SAFE SWAP", score:18, verdict:"SAFE",
+      flags:["SWAP_ROUTE: Uniswap v3 verified","SLIPPAGE: 0.3% within limits","CONTRACT: verified + audited"],
+      reasoning:"✅ Swap within approved parameters. Route verified. Slippage acceptable. Amount within position limits. APPROVED.",
+      color:"#A3FF12"
+    },
+    ownership:{
+      title:"OWNERSHIP TRANSFER", score:95, verdict:"BLOCK",
+      flags:["OWNERSHIP_ESCALATION: transferOwnership","AUTO-BLOCK: rule-003 triggered","ADMIN_RISK: permanent action"],
+      reasoning:"🔴 transferOwnership is irreversible. Rule-003 AUTO-BLOCK. Requires multisig + governance approval before execution.",
+      color:"#FF3B3B"
+    }
+  };
+
+  let paBlocked = 4217, paOk = 18943;
+
+  function paRunTest(type){
+    const t = PA_TESTS[type];
+    if(!t) return;
+    const box = document.getElementById("pa-result-box");
+    if(!box) return;
+
+    // Scanning animation
+    box.innerHTML = `<div style="text-align:center;padding:30px 16px;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:#FF9F0A;animation:pa-pulse .8s infinite;letter-spacing:.1em;">⟳ EVALUATING TRANSACTION...</div>
+      <div style="margin-top:8px;font-size:10px;color:#374151;font-family:'Space Mono',monospace;">decode → simulate → score → decide</div>
+    </div>`;
+
+    setTimeout(()=>{
+      const isBlock = t.verdict === "BLOCK";
+      const scoreColor = t.score>=70?"#FF3B3B":t.score>=40?"#FF9F0A":"#A3FF12";
+      const circumference = 2*Math.PI*28;
+      const offset = circumference*(1-(t.score/100));
+
+      box.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06);">
+          <div style="position:relative;width:64px;height:64px;flex-shrink:0;">
+            <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+              <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"/>
+              <circle cx="32" cy="32" r="28" fill="none" stroke="${scoreColor}" stroke-width="5"
+                stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
+                class="pa-score-ring" stroke-linecap="round"/>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:${scoreColor};">${t.score}</div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:${t.color};letter-spacing:.1em;">${isBlock?"⛔ BLOCKED":"✅ APPROVED"}</div>
+            <div style="font-size:11px;color:#6b7280;margin-top:3px;">${t.title}</div>
+            <div style="font-size:10px;color:#374151;margin-top:2px;">risk score ${t.score}/100</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          ${t.flags.map(f=>`<div style="font-family:'Space Mono',monospace;font-size:9px;color:${isBlock?"#FF8A8A":"#6b7280"};padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);">→ ${f}</div>`).join("")}
+        </div>
+        <div style="background:${isBlock?"rgba(255,59,59,.06)":"rgba(163,255,18,.04)"};border:1px solid ${isBlock?"rgba(255,59,59,.2)":"rgba(163,255,18,.15)"};border-radius:8px;padding:10px 12px;">
+          <div style="font-size:11px;color:${isBlock?"#FF8A8A":"#A3FF12"};line-height:1.5;font-family:'IBM Plex Sans',sans-serif;">${t.reasoning}</div>
+        </div>`;
+
+      // Update counters
+      if(isBlock) paBlocked++;
+      else paOk++;
+      const bc = document.getElementById("pa-count-blocked");
+      const oc = document.getElementById("pa-count-ok");
+      if(bc) bc.textContent = paBlocked.toLocaleString();
+      if(oc) oc.textContent = paOk.toLocaleString();
+    }, 900);
+  }
+
+  // Tick counters for PA
+  function paTick(){
+    paBlocked += Math.random()>.6?1:0;
+    paOk += Math.random()>.4?Math.floor(Math.random()*3):0;
+    const bc = document.getElementById("pa-count-blocked");
+    const oc = document.getElementById("pa-count-ok");
+    if(bc) bc.textContent = paBlocked.toLocaleString();
+    if(oc) oc.textContent = paOk.toLocaleString();
+  }
+
+  // Expose paRunTest globally
+  window.paRunTest = paRunTest;
+
+  // Start ticks
+  document.addEventListener("DOMContentLoaded", function(){
+    ceTick();
+    setInterval(ceTick, 3000);
+    setInterval(paTick, 4000);
+  });
+})();
+</script>
+</body>
+  </html>
